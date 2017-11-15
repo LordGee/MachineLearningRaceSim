@@ -57,9 +57,10 @@ GameObject:
   - component: {fileID: 65816943252881246}
   - component: {fileID: 54650415145907068}
   - component: {fileID: 114096527737746248}
+  - component: {fileID: 114526685940282426}
   m_Layer: 0
   m_Name: RaceCar
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -221,7 +222,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1292698174287042}
   m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4629728200262350}
@@ -752,7 +753,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93b216dc79d86ce45be4fabb501ce656, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  axleInfos:
+  wheelSets:
   - leftWheel: {fileID: 146347812020595020}
     rightWheel: {fileID: 146108569044293234}
     motor: 0
@@ -761,11 +762,22 @@ MonoBehaviour:
     rightWheel: {fileID: 146983675495464094}
     motor: 1
     steering: 0
-  maxMotorTorque: 500
-  maxSteeringAngle: 40
-  brakeForce: 400
-  centerOfMassCorrection: {x: 0, y: -1, z: 0}
-  controlled: 1
+  maximumMotorTorque: 500
+  maximumSteeringAngle: 30
+  brakeForce: 350
+  centerOfMassCorrection: {x: 0, y: 0, z: 0}
+  controllerEnabled: 1
+--- !u!114 &114526685940282426
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1292698174287042}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e581bd53956c78e4dbd4d44ea9a0d81c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!124 &124030026934745004
 Behaviour:
   m_ObjectHideFlags: 1

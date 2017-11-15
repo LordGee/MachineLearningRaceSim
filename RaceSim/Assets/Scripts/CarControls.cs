@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class AxleInfo {
+public class WheelSet {
     public WheelCollider leftWheel;
     public WheelCollider rightWheel;
     public bool motor;
@@ -11,72 +11,44 @@ public class AxleInfo {
 }
 
 public class CarControls : MonoBehaviour {
-    //Handling
-    public List<AxleInfo> axleInfos;
-    public float maxMotorTorque;
-    public float maxSteeringAngle;
+    public List<WheelSet> wheelSets;
+    public float maximumMotorTorque;
+    public float maximumSteeringAngle;
     public float brakeForce;
-
     public Vector3 centerOfMassCorrection;
-    //Internal
-    public bool controlled;
-    bool braking;
-
+    public bool controllerEnabled;
 
     void Start() {
         GetComponent<Rigidbody>().centerOfMass = centerOfMassCorrection;
     }
 
-    // finds the corresponding visual wheel
-    // correctly applies the transform
-    public void ApplyLocalPositionToVisuals(WheelCollider collider) {
-        if (collider.transform.childCount == 0) {
-            return;
-        }
-
-        Transform visualWheel = collider.transform.GetChild(0);
-
-        Vector3 position;
-        Quaternion rotation;
-        collider.GetWorldPose(out position, out rotation);
-
-        visualWheel.transform.position = position;
-        visualWheel.transform.rotation = rotation;
-    }
-
     public void FixedUpdate() {
-        if (controlled) {
-            float motor = maxMotorTorque * Input.GetAxis("Vertical");
-            float steering = maxSteeringAngle * Input.GetAxis("Horizontal");
-            if (Input.GetButton("Jump")) { braking = true; } else { braking = false; }
-
-            foreach (AxleInfo axleInfo in axleInfos) {
-                if (axleInfo.steering) {
-                    axleInfo.leftWheel.steerAngle = steering;
-                    axleInfo.rightWheel.steerAngle = steering;
-
-
-
+        if (controllerEnabled) {
+            float motor = maximumMotorTorque * Input.GetAxis("Vertical");
+            float steering = maximumSteeringAngle * Input.GetAxis("Horizontal");
+            bool braking;
+            if (Input.GetButton("Jump")) {
+                braking = true;
+            } else {
+                braking = false;
+            }
+            foreach (WheelSet wheels in wheelSets) {
+                if (wheels.steering) {
+                    wheels.leftWheel.steerAngle = steering;
+                    wheels.rightWheel.steerAngle = steering;
                 }
-                if (axleInfo.motor) {
-                    axleInfo.leftWheel.motorTorque = motor;
-                    axleInfo.rightWheel.motorTorque = motor;
+                if (wheels.motor) {
+                    wheels.leftWheel.motorTorque = motor;
+                    wheels.rightWheel.motorTorque = motor;
                 }
-
-                //Braking
                 if (braking) {
-                    axleInfo.leftWheel.brakeTorque = brakeForce;
-                    axleInfo.rightWheel.brakeTorque = brakeForce;
+                    wheels.leftWheel.brakeTorque = brakeForce;
+                    wheels.rightWheel.brakeTorque = brakeForce;
                 } else {
-                    axleInfo.leftWheel.brakeTorque = 0;
-                    axleInfo.rightWheel.brakeTorque = 0;
-                }
-
-                ApplyLocalPositionToVisuals(axleInfo.leftWheel);
-                ApplyLocalPositionToVisuals(axleInfo.rightWheel);
+                    wheels.leftWheel.brakeTorque = 0;
+                    wheels.rightWheel.brakeTorque = 0;
+                } 
             }
         }
     }
-
-
 }
