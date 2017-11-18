@@ -4,6 +4,142 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
+
+public class NeuralNetwork : MonoBehaviour
+{
+    public NeuralNetworkLayer inputLayer, hiddenLayer, outputLayer;
+
+    public void Initialise(int _numberNeuronInputs, int _numberNeuronHidden, int _numberNeuronOutputs)
+    {
+        NeuralNetworkLayer nullLayer = null;
+
+        inputLayer.numberOfNeurons = _numberNeuronInputs;
+        inputLayer.numberOfChildNeurons = _numberNeuronHidden;
+        inputLayer.numberOfParentNeurons = 0;
+        inputLayer.Initialise(_numberNeuronInputs, ref nullLayer, ref hiddenLayer);
+        inputLayer.RandomWeights();
+
+        hiddenLayer.numberOfNeurons = _numberNeuronHidden;
+        hiddenLayer.numberOfChildNeurons = _numberNeuronOutputs;
+        hiddenLayer.numberOfParentNeurons = _numberNeuronInputs;
+        hiddenLayer.Initialise(_numberNeuronHidden, ref inputLayer, ref outputLayer);
+        hiddenLayer.RandomWeights();
+
+        outputLayer.numberOfNeurons = _numberNeuronOutputs;
+        outputLayer.numberOfChildNeurons = 0;
+        outputLayer.numberOfParentNeurons = _numberNeuronHidden;
+        outputLayer.Initialise(_numberNeuronOutputs, ref hiddenLayer, ref nullLayer);
+        outputLayer.RandomWeights();
+    }
+
+    public void SetInput(int _i, float _value)
+    {
+        if (_i >= 0 && _i < inputLayer.numberOfNeurons)
+        {
+            inputLayer.neuronValues[_i] = _value;
+        }
+    }
+
+    public float GetOutput(int _i)
+    {
+        if (_i >= 0 && _i < outputLayer.numberOfNeurons)
+        {
+            return outputLayer.neuronValues[_i];
+        }
+        else
+        {
+            return (float)Int32.MaxValue;
+        }
+    }
+
+    public void SetDesiredOutput(int _i, float _value)
+    {
+        if (_i >= 0 && _i < outputLayer.numberOfNeurons)
+        {
+            outputLayer.desiredValues[_i] = _value;
+        }
+    }
+
+    public void FeedForward()
+    {
+        inputLayer.CalculateNeuronValues();
+        hiddenLayer.CalculateNeuronValues();
+        outputLayer.CalculateNeuronValues();
+    }
+
+    public void BackPropagate()
+    {
+        outputLayer.CalculateErrors();
+        hiddenLayer.CalculateErrors();
+
+        hiddenLayer.AdjustWeights();
+        inputLayer.AdjustWeights();
+    }
+
+    public int GetMaxOutputID()
+    {
+        int id = 0;
+        float maxValue = outputLayer.neuronValues[0];
+
+        for (int i = 0; i < outputLayer.numberOfNeurons; i++)
+        {
+            if (outputLayer.neuronValues[i] > maxValue)
+            {
+                maxValue = outputLayer.neuronValues[i];
+                id = i;
+            }
+        }
+
+        return id;
+    }
+
+    public float CalculateError()
+    {
+        float error = 0;
+
+        for (int i = 0; i < outputLayer.numberOfNeurons; i++)
+        {
+            error += Mathf.Pow(outputLayer.neuronValues[i] - outputLayer.desiredValues[i], 2);
+        }
+        error = error / outputLayer.numberOfNeurons;
+
+        return error;
+    }
+
+    public void SetLearningRate(float _rate)
+    {
+        inputLayer.learningRate = _rate;
+        hiddenLayer.learningRate = _rate;
+        outputLayer.learningRate = _rate;
+    }
+
+    public void SetLinearOutput(bool _use)
+    {
+        inputLayer.linearOutput = _use;
+        hiddenLayer.linearOutput = _use;
+        outputLayer.linearOutput = _use;
+    }
+
+    public void SetMomentum(bool _use, float _factor)
+    {
+        inputLayer.useMomentum = _use;
+        hiddenLayer.useMomentum = _use;
+        outputLayer.useMomentum = _use;
+
+        inputLayer.momentumFactor = _factor;
+        hiddenLayer.momentumFactor = _factor;
+        outputLayer.momentumFactor = _factor;
+    }
+
+    public void DumpData(string _fileName)
+    {
+        // create writestream
+    }
+}
+
+
+
+/*
 public class NeuralNetwork : MonoBehaviour, IComparable<NeuralNetwork>
 {
 
@@ -140,3 +276,4 @@ public class NeuralNetwork : MonoBehaviour, IComparable<NeuralNetwork>
     }
 
 }
+*/
