@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CarManager : MonoBehaviour {
 
-     private GameController gameControl;
+    private GameController gameControl;
 
     void Start() {
         gameControl = FindObjectOfType<GameController>();

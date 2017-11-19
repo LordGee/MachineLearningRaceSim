@@ -7,6 +7,329 @@ using Random = UnityEngine.Random;
 
 public class NeuralNetwork : MonoBehaviour
 {
+
+    private int inputAmount, outputAmount;
+    private List<float> inputs;
+    private NNLayer inputLayer;
+    private List<NNLayer> hiddenLayers;
+    private NNLayer outputLayer;
+    private List<float> outputs;
+    private List<float> weights;
+
+    public NeuralNetwork()
+    {
+        inputLayer = null;
+        outputLayer = null;
+    }
+
+    ~NeuralNetwork()
+    {
+        if (inputLayer != null) {
+            inputLayer = null;
+        }
+        if (outputLayer != null) {
+            outputLayer = null;
+        }
+        for (int i = 0; i < hiddenLayers.Capacity; i++) {
+            if (hiddenLayers[i] != null) {
+                hiddenLayers[i] = null;
+            }
+        } // not sure if I need this loop
+        hiddenLayers.Clear();
+    }
+
+    public void UpdateNN()
+    {
+        outputs.Clear();
+        for (int i = 0; i < hiddenLayers.Capacity; i++)
+        {
+            if (i > 0)
+            {
+                inputs = outputs;
+            }
+            hiddenLayers[i].Evaluate(inputs, ref outputs);
+        }
+        inputs = outputs;
+        outputLayer.Evaluate(inputs, ref outputs);
+    }
+
+    public void SetInput(List<float> _in)
+    {
+        inputs = _in;
+    }
+
+    public float GetOutput(int _ID)
+    {
+        if (_ID >= outputAmount)
+        {
+            return 0.0f;
+        }
+        return outputs[_ID];
+    }
+
+    public int GetTotalOutputs()
+    {
+        return outputAmount;
+    }
+
+    public void ExportNN(string _filename)
+    {
+        /*
+         char buff[128] = {0};
+		sprintf(buff, "ExportedNNs/%s", filename);
+		std::ofstream file;
+		file.open(buff);
+
+		file << "<NeuralNetwork>" << endl;
+		file <<"TotalOuputs=" << this->outputAmount << endl;
+		file <<"TotalInputs=" << this->inputAmount << endl;
+		// Export hidden layerss.
+		for (unsigned int i = 0; i < hiddenLayers.size(); i++)
+		{
+			hiddenLayers[i]->SaveLayer(file, "Hidden");
+		}
+		// Export output layer.
+		outputLayer->SaveLayer(file, "Output");
+		file << "</NeuralNetwork>" << endl;
+
+		file.close();
+         */
+    }
+
+    public void ImportNN(string _filename)
+    {
+        /*
+         		FILE* file = fopen(filename,"rt");
+
+		if(file!=NULL)
+		{
+			enum LayerType
+			{
+				HIDDEN,
+				OUTPUT,
+			};
+
+			float weight = 0.0f;
+			int totalNeurons = 0;
+			int totalWeights = 0;
+			int totalInputs = 0;
+			int currentNeuron = 0;
+			std::vector<Neuron> neurons;
+			std::vector<float> weights;
+			LayerType type = HIDDEN;
+
+
+			char buffComp[1024] ={0};
+
+			while(fgets(buffComp,1024,file))
+			{
+				char buff[1024] = {0};
+
+				if(buffComp[strlen(buffComp)-1]=='\n')
+				{
+					for(unsigned int i = 0; i<strlen(buffComp)-1;i++)
+					{
+						buff[i] = buffComp[i];
+					}
+				}
+
+				if(0 == strcmp(buff, "<NeuralNetwork>"))
+				{
+				}
+				else if (0 == strcmp(buff,"</NeuralNetwork>"))
+				{
+					break;
+				}
+				else if (0 == strcmp(buff,"<NLayer>"))
+				{
+					weight = 0.0f;
+					totalNeurons = 0;
+					totalWeights = 0;
+					totalInputs = 0;
+					currentNeuron = 0;
+					neurons.clear();
+					type = HIDDEN;
+				}
+				else if (0 == strcmp(buff,"</NLayer>"))
+				{
+					NLayer* layer = new NLayer();
+					layer->SetNeurons(neurons, neurons.size(), totalInputs);
+					switch (type)
+					{
+					case HIDDEN:
+						this->hiddenLayers.push_back(layer);
+						layer = NULL;
+						break;
+					case OUTPUT:
+						this->outputLayer = layer;
+						layer = NULL;
+						break;
+					};
+				}
+				else if (0 == strcmp(buff,"<Neuron>"))
+				{
+					weights.clear();
+				}
+				else if (0 == strcmp(buff,"</Neuron>"))
+				{
+					neurons[currentNeuron].Initilise(weights, totalInputs);
+					currentNeuron++;
+				}
+			
+				else
+				{
+					char* token = strtok(buff, "=");
+					if(token != NULL)
+					{
+						char* value = strtok(NULL,"=");
+
+
+						if (0 == strcmp(token,"Type"))
+						{
+							if (0 == strcmp("Hidden", value))
+							{
+								type = HIDDEN;
+							}
+							else if (0 == strcmp("Output", value))
+							{
+								type = OUTPUT;
+							}
+						}
+						else if (0 == strcmp(token,"Inputs"))
+						{
+							totalInputs = atoi(value);
+						} 
+						else if (0 == strcmp(token,"Neurons"))
+						{
+							totalNeurons = atoi(value);
+						} 
+						else if (0 == strcmp(token,"Weights"))
+						{
+							totalWeights = atoi(value);
+						} 
+						else if (0 == strcmp(token,"W"))
+						{
+							weight = (float)atof(value);
+						} 
+						else if (0 == strcmp(token,"TotalOuputs"))
+						{
+							outputAmount = atoi(value);
+						} 
+						else if (0 == strcmp(token,"TotalInputs"))
+						{
+							inputAmount = atoi(value);
+						} 
+					}
+				}
+			}
+			fclose(file);
+		}
+         */
+    }
+
+    public void CreateNN(int _hidden, int _input, int _neuronsPerHidden, int _output)
+    {
+        inputAmount = _input;
+        outputAmount = _output;
+        for (int i = 0; i < _hidden; i++)
+        {
+            NNLayer layer = new NNLayer();
+            layer.PopulateLayer(_neuronsPerHidden, _input);
+            hiddenLayers.Add(layer);
+        }
+        outputLayer = new NNLayer();
+        outputLayer.PopulateLayer(_output, _neuronsPerHidden);
+    }
+
+    public void ReleaseNN()
+    {
+        if (inputLayer != null) {
+            inputLayer = null;
+        }
+        if (outputLayer != null) {
+            outputLayer = null;
+        }
+        for (int i = 0; i < hiddenLayers.Capacity; i++) {
+            if (hiddenLayers[i] != null) {
+                hiddenLayers[i] = null;
+            }
+        } // not sure if I need this loop
+        hiddenLayers.Clear();
+    }
+
+    public int GetNumberOfHiddenLayers()
+    {
+        return hiddenLayers.Capacity;
+    }
+
+
+    public Genome ToGenome()
+    {
+        Genome genome = new Genome();
+        for (int i = 0; i < hiddenLayers.Capacity; i++)
+        {
+            weights.Clear();
+            hiddenLayers[i].GetWeights(ref weights);
+            for (int j = 0; j < weights.Capacity; j++)
+            {
+                genome.weights.Add(weights[j]);
+            }
+        }
+
+        weights.Clear();
+        outputLayer.GetWeights(ref weights);
+        for (int i = 0; i < weights.Capacity; i++)
+        {
+            genome.weights.Add(weights[i]);
+        }
+
+        return genome;
+    }
+
+    public void FromGenome(ref Genome _genome, int _input, int _neuronsPerHidden, int _output)
+    {
+        ReleaseNN();
+        outputAmount = _output;
+        inputAmount = _input;
+        int weightsForHidden = _input * _neuronsPerHidden;
+        NNLayer hidden = new NNLayer();
+        List<Neuron> neurons = null;
+        neurons.Capacity = _neuronsPerHidden;
+        for (int i = 0; i < _neuronsPerHidden; i++)
+        {
+            weights.Clear();
+            weights.Capacity = _input + 1;
+            for (int j = 0; j < _input + 1; j++)
+            {
+                weights[j] = _genome.weights[i * _neuronsPerHidden + j];
+            }
+            neurons[i].Initilise(weights, _input);
+        }
+        hidden.LoadLayer(neurons);
+        hiddenLayers.Add(hidden);
+
+        int weightsForOutput = _neuronsPerHidden * _output;
+        neurons.Clear();
+        neurons.Capacity = _output;
+        for (int i = 0; i < _output; i++)
+        {
+            weights.Clear();
+            weights.Capacity = _neuronsPerHidden + 1;
+            for (int j = 0; j < _neuronsPerHidden + 1; j++)
+            {
+                weights[j] = _genome.weights[i * _neuronsPerHidden + j];
+            }
+            neurons[i].Initilise(weights, _neuronsPerHidden);
+        }
+        outputLayer = new NNLayer();
+        outputLayer.LoadLayer(neurons);
+    }
+
+}
+
+/*
+public class NeuralNetwork : MonoBehaviour
+{
     public NeuralNetworkLayer inputLayer, hiddenLayer, outputLayer;
 
     public void Initialise(int _numberNeuronInputs, int _numberNeuronHidden, int _numberNeuronOutputs)
@@ -136,8 +459,7 @@ public class NeuralNetwork : MonoBehaviour
         // create writestream
     }
 }
-
-
+*/
 
 /*
 public class NeuralNetwork : MonoBehaviour, IComparable<NeuralNetwork>
