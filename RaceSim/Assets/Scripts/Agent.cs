@@ -49,6 +49,13 @@ public class Agent : MonoBehaviour
 
     public NeuralNetwork GetNeuralNetwork() { return nn; }
 
+    public float GetDistanceDelta() {
 
+        return 1f;
+    }
+
+    public bool HasAgentFailed() {
+        return hasFailed;
+    }
 
 }
