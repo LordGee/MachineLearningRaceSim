@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GeneticAlgorithm : MonoBehaviour
+public class GeneticAlgorithm
 {
 
     private int currentGenome, genomeID, generation, totalGenomeWeight;
@@ -212,9 +212,13 @@ public class GeneticAlgorithm : MonoBehaviour
 
     public void ClearPopulation()
     {
-        for (int i = 0; i < population.Capacity; i++) {
-            if (population[i] != null) {
-                population[i] = null;
+        Debug.Log(population.Count);
+        if (population.Count > 0)
+        {
+            for (int i = 0; i < population.Capacity; i++) {
+                if (population[i] != null) {
+                    population[i] = null;
+                }
             }
         }
         population.Clear();

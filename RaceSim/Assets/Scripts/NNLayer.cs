@@ -31,7 +31,7 @@ public class NNLayer : MonoBehaviour
         /*
          fileOut << "<NLayer>" << std::endl;
 		fileOut << "Type=" << layerType << std::endl;
-		fileOut << "Inputs=" << this->totalInputs << std::endl;
+		fileOut << "NNInputs=" << this->totalInputs << std::endl;
 		fileOut << "Neurons=" << this->neurons.size() << std::endl;
 		fileOut << "-Build-" << std::endl;
 		for (unsigned int i = 0; i < this->neurons.size(); i++)

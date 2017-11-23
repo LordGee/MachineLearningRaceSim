@@ -195,7 +195,7 @@ public class NeuralNetwork : MonoBehaviour
 								type = OUTPUT;
 							}
 						}
-						else if (0 == strcmp(token,"Inputs"))
+						else if (0 == strcmp(token,"NNInputs"))
 						{
 							totalInputs = atoi(value);
 						} 

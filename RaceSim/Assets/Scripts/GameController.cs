@@ -9,11 +9,15 @@ public class GameController : MonoBehaviour {
     private float gameTimer;
     private int gameAttempts;
     private Vector3 spawnPoint;
+    private Quaternion quaternion = Quaternion.AngleAxis(90f, Vector3.up);
+    private Transform resetPosition;
+    private CarManager cm;
 
     private void Start() {
         spawnPoint = GameObject.FindGameObjectWithTag("Spawn").transform.position;
         gameAttempts = 1;
         ResetGame();
+        cm = FindObjectOfType<CarManager>();
     }
 
     private void Update()
@@ -31,8 +35,14 @@ public class GameController : MonoBehaviour {
         gameTimer = 0f;
         if (GameObject.FindGameObjectsWithTag("Player").Length <= 1)
         {
-            Instantiate(car, spawnPoint, Quaternion.AngleAxis(90f, Vector3.up));
+            GameObject newCar = Instantiate(car, spawnPoint, Quaternion.AngleAxis(90f, Vector3.up));
         }
+    }
+
+    public void ResetCar()
+    {
+        gameAttempts++;
+        cm.ResetPosition(spawnPoint, quaternion);
     }
 
     public void FinishGame(GameObject _car) { 

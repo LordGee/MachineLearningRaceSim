@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EntityManager : MonoBehaviour
+public class EntityManager
 {
-    private Agent testAgent;
-    private List<Agent> agents;
+    private AIAgent _testAiAgent;
+    private List<AIAgent> agents;
     private float currentFitness;
     private float bestFitness;
     private float currentTimer;
@@ -27,25 +27,25 @@ public class EntityManager : MonoBehaviour
         nn = new NeuralNetwork();
         Genome g = ga.GetNextGenome();
         nn.FromGenome(ref g, 
-            (int)ConstantManager.Inputs.RAYCAST_COUNT,
+            (int)ConstantManager.NNInputs.INPUT_COUNT,
             ConstantManager.HIDDEN_LAYER_NEURONS,
-            (int)ConstantManager.NeuralNetOutputs.OUTPUT_COUNT);
+            (int)ConstantManager.NNOutputs.OUTPUT_COUNT);
         
-        testAgent = new Agent();
-        testAgent.SetPosition();
-        testAgent.AttachNeuralNetwork(nn);
+        _testAiAgent = new AIAgent();
+        _testAiAgent.SetPosition();
+        _testAiAgent.AttachNeuralNetwork(nn);
     }
 
     private int GetTotalWeight() {
-        return (int)ConstantManager.Inputs.RAYCAST_COUNT *
+        return (int)ConstantManager.NNInputs.INPUT_COUNT *
             ConstantManager.HIDDEN_LAYER_NEURONS *
-            (int)ConstantManager.NeuralNetOutputs.OUTPUT_COUNT +
+            (int)ConstantManager.NNOutputs.OUTPUT_COUNT +
             ConstantManager.HIDDEN_LAYER_NEURONS +
-            (int)ConstantManager.NeuralNetOutputs.OUTPUT_COUNT;
+            (int)ConstantManager.NNOutputs.OUTPUT_COUNT;
     } 
 
     public void ExportCurrentAgent() {
-        testAgent.GetNeuralNetwork().ExportNN("NeuralNetwork-" + DateTime.UtcNow.ToShortDateString() + ".txt");
+        _testAiAgent.GetNeuralNetwork().ExportNN("NeuralNetwork-" + DateTime.UtcNow.ToShortDateString() + ".txt");
     }
 
     public void NextTestSubject() {
@@ -53,12 +53,12 @@ public class EntityManager : MonoBehaviour
         currentFitness = 0.0f;
         Genome g = ga.GetNextGenome();
         nn.FromGenome(ref g, 
-            (int)ConstantManager.Inputs.RAYCAST_COUNT, 
+            (int)ConstantManager.NNInputs.INPUT_COUNT, 
             ConstantManager.HIDDEN_LAYER_NEURONS, 
-            (int)ConstantManager.NeuralNetOutputs.OUTPUT_COUNT);
-        testAgent = new Agent();
-        testAgent.SetPosition();
-        testAgent.AttachNeuralNetwork(nn);
+            (int)ConstantManager.NNOutputs.OUTPUT_COUNT);
+        _testAiAgent = new AIAgent();
+        _testAiAgent.SetPosition();
+        _testAiAgent.AttachNeuralNetwork(nn);
     }
 
     public void BreedPopulation() {
@@ -77,10 +77,10 @@ public class EntityManager : MonoBehaviour
     }
 
     private void Update() {
-        if (testAgent.HasAgentFailed()) {
+        if (_testAiAgent.HasAgentFailed()) {
             ForceToNextAgent();
         }
-        currentFitness += testAgent.GetDistanceDelta() / 2.0f;
+        currentFitness += _testAiAgent.GetDistanceDelta() / 2.0f;
         if (currentFitness > bestFitness) {
             bestFitness = currentFitness;
         }
