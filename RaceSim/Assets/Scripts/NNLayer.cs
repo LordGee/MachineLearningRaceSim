@@ -3,11 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NNLayer : MonoBehaviour
+public class NNLayer
 {
 
     private int totalNeurons, totalInputs;
     private List<Neuron> neurons;
+
+    public NNLayer() {
+        totalInputs = -1;
+        totalNeurons = -1;
+        neurons = new List<Neuron>();
+    }
 
     public void Evaluate(List<float> _input, ref List<float> _output)
     {
@@ -20,7 +26,7 @@ public class NNLayer : MonoBehaviour
                 activation += _input[inputIndex] * neurons[i].weights[j];
                 inputIndex++;
             }
-            activation += neurons[i].weights[neurons[i].numberOfInputs] * Neuron.BIAS;
+            activation += neurons[i].weights[neurons[i].numberOfInputs] * ConstantManager.BIAS;
             _output.Add(Sigmoid(activation, 1.0f));
             inputIndex = 0;
         }
@@ -49,10 +55,10 @@ public class NNLayer : MonoBehaviour
          */
     }
 
-    public void LoadLayer(List<Neuron> _neurons)
+    public void LoadLayer(List<Neuron> _neuron)
     {
-        totalNeurons = _neurons.Count;
-        neurons = _neurons;
+        totalNeurons = _neuron.Count;
+        neurons = _neuron;
     }
 
     public void PopulateLayer(int _neurons, int _inputs)

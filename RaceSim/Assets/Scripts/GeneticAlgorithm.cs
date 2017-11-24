@@ -16,6 +16,7 @@ public class GeneticAlgorithm
         totalPopulation = 0;
         genomeID = 0;
         generation = 1;
+        population = new List<Genome>();
     }
 
     ~GeneticAlgorithm()
@@ -162,10 +163,10 @@ public class GeneticAlgorithm
             genome.fitness = 0.0f;
             genome.weights.Capacity = _totalWeights;
             for (int j = 0; j < _totalWeights; j++) {
-                genome.weights[j] = Random.Range(-1.0f, 1.0f);
+                genome.weights.Add(Random.Range(-1.0f, 1.0f));
             }
             genomeID++;
-            population[i] = genome;
+            population.Add(genome);
         }
     }
 
@@ -212,7 +213,6 @@ public class GeneticAlgorithm
 
     public void ClearPopulation()
     {
-        Debug.Log(population.Count);
         if (population.Count > 0)
         {
             for (int i = 0; i < population.Capacity; i++) {

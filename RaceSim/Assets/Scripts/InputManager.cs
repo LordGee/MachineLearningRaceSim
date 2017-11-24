@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class RaycastManager : MonoBehaviour
+public class InputManager : MonoBehaviour
 {
     public struct RaycastInfo {
         public Vector3 position;
@@ -23,17 +23,20 @@ public class RaycastManager : MonoBehaviour
         GetDirection();
     }
 
-	void FixedUpdate () {
-        UpdateInputs();
-	}
-
     public void UpdateInputs() {
         GetDirection();
         GetAcceleration();
         CastAllRays();
     }
 
-    
+    public float GetInputByIndex(int _index) {
+        if (_index != (int)ConstantManager.NNInputs.ACCELERATION) {
+            return raycastInfo[_index].distance;
+        } else if (_index == (int)ConstantManager.NNInputs.ACCELERATION) {
+            return acceleration;
+        }
+        return 0;
+    }
 
     public void GetDirection()
     {
@@ -41,7 +44,6 @@ public class RaycastManager : MonoBehaviour
         
         //Front
         float radian = radianOrientation;
-
         raycastInfo[(int)ConstantManager.NNInputs.RAYCAST_FORWARD].position = new Vector3(CosX(radian, ConstantManager.RAY_LENGTH), 0f, SinX(radian, ConstantManager.RAY_LENGTH));
 
         //FrontRight
@@ -52,24 +54,6 @@ public class RaycastManager : MonoBehaviour
         radian = radianOrientation + GetRadian(0.25f);
         raycastInfo[(int)ConstantManager.NNInputs.RAYCAST_FORWARD_LEFT].position = new Vector3(CosX(radian, ConstantManager.RAY_LENGTH), 0, SinX(radian, ConstantManager.RAY_LENGTH));
 
-
-        /*
-        //Right
-        radian = radianOrientation - GetRadian(0.5f);
-        _raycastData[(int)Direction.Right].coordinates = new Vector3(CosX(radian, lenght), 0, SinX(radian, lenght));
-
-        //FrontFrontRight
-        radian = radianOrientation - GetRadian(0.04175f);
-        _raycastData[(int)Direction.FrontFrontRight].coordinates = new Vector3(CosX(radian, lenght), 0, SinX(radian, lenght));
-
-        //FrontFrontLeft
-        radian = radianOrientation + GetRadian(0.25f);
-        _raycastData[(int)Direction.FrontFrontLeft].coordinates = new Vector3(CosX(radian, lenght), 0, SinX(radian, lenght));
-
-        //Left
-        radian = radianOrientation + GetRadian(0.5f);
-        _raycastData[(int)Direction.Left].coordinates = new Vector3(CosX(radian, lenght), 0, SinX(radian, lenght));
-        */
     }
 
     private void GetAcceleration()

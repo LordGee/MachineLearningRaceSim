@@ -40,4 +40,6 @@ public class ConstantManager
         GENETIC_ALGORITHM
     };
 
+    public const float BIAS = -1.0f;
+    // public enum EvaluationFunction { EVAL_SIGMOID, EVAL_STEP, EVAL_BIPOLAR };
 }

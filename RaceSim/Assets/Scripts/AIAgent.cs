@@ -8,11 +8,13 @@ public class AIAgent : MonoBehaviour
     private float distanceDelta;
     private NeuralNetwork nn;
     private CarControls cc;
+    private InputManager im;
 
-    public AIAgent()
+    public void Start()
     {
         nn = null;
         cc = FindObjectOfType<CarControls>();
+        im = FindObjectOfType<InputManager>();
         hasFailed = false;
         distanceDelta = 0.0f;
     }
@@ -22,11 +24,11 @@ public class AIAgent : MonoBehaviour
         if (!hasFailed)
         {
             List<float> inputs = null;
+            im.UpdateInputs();
             for (int i = 0; i < (int)ConstantManager.NNInputs.INPUT_COUNT; i++)
             {
                 // Todo: get raycast events and add distance to the input list
-                float raycast = 1.253f;
-                inputs.Add(raycast);
+                inputs.Add(im.GetInputByIndex(i));
             }
             nn.SetInput(inputs);
             nn.UpdateNN();

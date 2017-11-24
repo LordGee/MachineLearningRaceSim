@@ -5,7 +5,7 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 
-public class NeuralNetwork : MonoBehaviour
+public class NeuralNetwork
 {
 
     private int inputAmount, outputAmount;
@@ -15,11 +15,15 @@ public class NeuralNetwork : MonoBehaviour
     private NNLayer outputLayer;
     private List<float> outputs;
     private List<float> weights;
+    private List<Neuron> neurons; 
 
     public NeuralNetwork()
     {
         inputLayer = null;
         outputLayer = null;
+        hiddenLayers = new List<NNLayer>();
+        weights = new List<float>();
+        neurons = new List<Neuron>();
     }
 
     ~NeuralNetwork()
@@ -249,7 +253,7 @@ public class NeuralNetwork : MonoBehaviour
         if (outputLayer != null) {
             outputLayer = null;
         }
-        for (int i = 0; i < hiddenLayers.Capacity; i++) {
+        for (int i = 0; i < hiddenLayers.Count; i++) {
             if (hiddenLayers[i] != null) {
                 hiddenLayers[i] = null;
             }
@@ -293,23 +297,33 @@ public class NeuralNetwork : MonoBehaviour
         inputAmount = _input;
         int weightsForHidden = _input * _neuronsPerHidden;
         NNLayer hidden = new NNLayer();
-        List<Neuron> neurons = null;
+        
         neurons.Capacity = _neuronsPerHidden;
+        
         for (int i = 0; i < _neuronsPerHidden; i++)
         {
             weights.Clear();
             weights.Capacity = _input + 1;
             for (int j = 0; j < _input + 1; j++)
             {
-                weights[j] = _genome.weights[i * _neuronsPerHidden + j];
+                weights.Add(_genome.weights[i * _neuronsPerHidden + j]);
             }
-            neurons[i].Initilise(weights, _input);
+
+            neurons.Add(null);
+            neurons[i] = new Neuron();
+            neurons[i].weights = this.weights;
+            neurons[i].numberOfInputs = _input;
+
+            // neurons[i].Initilise(weights, _input);
         }
         hidden.LoadLayer(neurons);
+       
+        
         hiddenLayers.Add(hidden);
 
         int weightsForOutput = _neuronsPerHidden * _output;
         neurons.Clear();
+        neurons = new List<Neuron>();
         neurons.Capacity = _output;
         for (int i = 0; i < _output; i++)
         {
@@ -317,12 +331,19 @@ public class NeuralNetwork : MonoBehaviour
             weights.Capacity = _neuronsPerHidden + 1;
             for (int j = 0; j < _neuronsPerHidden + 1; j++)
             {
-                weights[j] = _genome.weights[i * _neuronsPerHidden + j];
+                weights.Add(_genome.weights[i * _neuronsPerHidden + j]);
             }
-            neurons[i].Initilise(weights, _neuronsPerHidden);
+
+            neurons.Add(null);
+            neurons[i] = new Neuron();
+            neurons[i].weights = this.weights;
+            neurons[i].numberOfInputs = _input;
+
+            // neurons[i].Initilise(weights, _neuronsPerHidden);
         }
         outputLayer = new NNLayer();
         outputLayer.LoadLayer(neurons);
+        
     }
 
 }

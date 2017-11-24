@@ -31,7 +31,9 @@ public class EntityManager
             ConstantManager.HIDDEN_LAYER_NEURONS,
             (int)ConstantManager.NNOutputs.OUTPUT_COUNT);
         
-        _testAiAgent = new AIAgent();
+        // AIAgent _testAiAgent = new AIAgent();
+        
+
         _testAiAgent.SetPosition();
         _testAiAgent.AttachNeuralNetwork(nn);
     }

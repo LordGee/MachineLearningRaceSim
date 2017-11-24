@@ -4,10 +4,13 @@ using UnityEngine;
 
 public class Neuron {
 
-    public int numberOfInputs;
-    public List<float> weights;
-    public const float BIAS = -1.0f;
-    public enum EvaluationFunction { EVAL_SIGMOID, EVAL_STEP, EVAL_BIPOLAR };
+    public int numberOfInputs { get; set; }
+    public List<float> weights { get; set; }
+
+    public Neuron() {
+        numberOfInputs = -1;
+        weights = new List<float>();
+    }
 
     public void Populate(int _inputs)
     {
@@ -24,5 +27,5 @@ public class Neuron {
         weights = _weightsIn;
     }
 
-    public float GetBias() { return BIAS; }
+    public float GetBias() { return ConstantManager.BIAS; }
 }
