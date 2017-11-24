@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4908688663078630}
   - component: {fileID: 33865584241411318}
   - component: {fileID: 23942972512640904}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: BODY
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -39,7 +39,7 @@ GameObject:
   - component: {fileID: 33537763066447458}
   - component: {fileID: 136101016421784520}
   - component: {fileID: 23195755324287376}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: FrontLeftSensor
   m_TagString: Sensor
   m_Icon: {fileID: 0}
@@ -57,7 +57,7 @@ GameObject:
   - component: {fileID: 33224588291164840}
   - component: {fileID: 136190651159597252}
   - component: {fileID: 23979828386197170}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: FrontRightSensor
   m_TagString: Sensor
   m_Icon: {fileID: 0}
@@ -74,7 +74,7 @@ GameObject:
   - component: {fileID: 4620848483168010}
   - component: {fileID: 33194442504538270}
   - component: {fileID: 23003711925194506}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ANTENNA
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 114096527737746248}
   - component: {fileID: 114526685940282426}
   - component: {fileID: 114111575781632110}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: RaceCar
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -113,7 +113,7 @@ GameObject:
   - component: {fileID: 20543198882524464}
   - component: {fileID: 124030026934745004}
   - component: {fileID: 81912807632264440}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Main Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 33440168160788680}
   - component: {fileID: 23743045124231630}
   - component: {fileID: 146174206518224812}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: REAR_LEFT_WHEEL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -149,7 +149,7 @@ GameObject:
   - component: {fileID: 33986892625655342}
   - component: {fileID: 23525651327083954}
   - component: {fileID: 146108569044293234}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: FRONT_RIGHT_WHEEL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -166,7 +166,7 @@ GameObject:
   - component: {fileID: 4298291992333492}
   - component: {fileID: 33437663740112628}
   - component: {fileID: 23841803410078280}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: RIGHT_MIRROR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -184,7 +184,7 @@ GameObject:
   - component: {fileID: 33277954582964994}
   - component: {fileID: 136655366868256114}
   - component: {fileID: 23949635096781744}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: FrontSensor
   m_TagString: Sensor
   m_Icon: {fileID: 0}
@@ -202,7 +202,7 @@ GameObject:
   - component: {fileID: 33835121785114166}
   - component: {fileID: 23796377530998274}
   - component: {fileID: 146347812020595020}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: FRONT_LEFT_WHEEL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -219,7 +219,7 @@ GameObject:
   - component: {fileID: 4069720885507506}
   - component: {fileID: 33563603913540552}
   - component: {fileID: 23907162969247674}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: LEFT_MIRROR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -237,7 +237,7 @@ GameObject:
   - component: {fileID: 33630473574901240}
   - component: {fileID: 23869783632417546}
   - component: {fileID: 146983675495464094}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: REAR_RIGHT_WHEEL
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -37,7 +37,7 @@ public class RaycastManager : MonoBehaviour
 
     public void GetDirection()
     {
-        float radianOrientation = -transform.rotation.eulerAngles.y * Mathf.PI / 180;
+        float radianOrientation = (-transform.rotation.eulerAngles.y + 90f) * Mathf.PI / 180;
         
         //Front
         float radian = radianOrientation;
@@ -45,11 +45,11 @@ public class RaycastManager : MonoBehaviour
         raycastInfo[(int)ConstantManager.NNInputs.RAYCAST_FORWARD].position = new Vector3(CosX(radian, ConstantManager.RAY_LENGTH), 0f, SinX(radian, ConstantManager.RAY_LENGTH));
 
         //FrontRight
-        radian = radianOrientation - GetRadian(0.04175f);
+        radian = radianOrientation - GetRadian(0.25f);
         raycastInfo[(int)ConstantManager.NNInputs.RAYCAST_FORWARD_RIGHT].position = new Vector3(CosX(radian, ConstantManager.RAY_LENGTH), 0, SinX(radian, ConstantManager.RAY_LENGTH));
 
         //FrontLeft
-        radian = radianOrientation + GetRadian(0.04175f);
+        radian = radianOrientation + GetRadian(0.25f);
         raycastInfo[(int)ConstantManager.NNInputs.RAYCAST_FORWARD_LEFT].position = new Vector3(CosX(radian, ConstantManager.RAY_LENGTH), 0, SinX(radian, ConstantManager.RAY_LENGTH));
 
 
@@ -59,7 +59,7 @@ public class RaycastManager : MonoBehaviour
         _raycastData[(int)Direction.Right].coordinates = new Vector3(CosX(radian, lenght), 0, SinX(radian, lenght));
 
         //FrontFrontRight
-        radian = radianOrientation - GetRadian(0.25f);
+        radian = radianOrientation - GetRadian(0.04175f);
         _raycastData[(int)Direction.FrontFrontRight].coordinates = new Vector3(CosX(radian, lenght), 0, SinX(radian, lenght));
 
         //FrontFrontLeft
@@ -95,6 +95,7 @@ public class RaycastManager : MonoBehaviour
     public void RayCast(int _index) {
         RaycastHit hit;
 
+        /* Ref: https://docs.unity3d.com/Manual/Layers.html */
         // Bit shift the index of the layer (8) to get a bit mask
         int layerMask = 1 << 8;
         // This would cast rays only against colliders in layer 8, so we just inverse the mask.
@@ -112,7 +113,7 @@ public class RaycastManager : MonoBehaviour
             col = Color.green;
         Debug.DrawLine(transform.position, hit.point, col);
 
-        Debug.Log(hit.transform.name);
+        // Debug.Log(hit.transform.name + _index);
     }
 
     /* reusable math functions */
