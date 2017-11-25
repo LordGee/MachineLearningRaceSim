@@ -12,7 +12,7 @@ public class GeneticAlgorithm
 
     public GeneticAlgorithm()
     {
-        currentGenome = -1;
+        currentGenome = 0;
         totalPopulation = 0;
         genomeID = 0;
         generation = 1;
@@ -27,7 +27,7 @@ public class GeneticAlgorithm
     public Genome GetNextGenome()
     {
         currentGenome++;
-        if (currentGenome >= population.Capacity) {
+        if (currentGenome >= population.Count || currentGenome < 0) {
             return null;
         }
         return population[currentGenome];
@@ -37,7 +37,7 @@ public class GeneticAlgorithm
     {
         int bestGenome = -1;
         float fitness = 0;
-        for (int i = 0; i < population.Capacity; i++) {
+        for (int i = 0; i < population.Count; i++) {
             if (population[i].fitness > fitness) {
                 fitness = population[i].fitness;
                 bestGenome = i;
@@ -50,7 +50,7 @@ public class GeneticAlgorithm
     {
         int worstGenome = -1;
         float fitness = 999999999;
-        for (int i = 0; i < population.Capacity; i++) {
+        for (int i = 0; i < population.Count; i++) {
             if (population[i].fitness < fitness) {
                 fitness = population[i].fitness;
                 worstGenome = i;
@@ -91,7 +91,7 @@ public class GeneticAlgorithm
             for (int i = 0; i < totalPopulation; i++) {
                 if (population[i].fitness > bestFitness) {
                     bool isUsed = false;
-                    for (int j = 0; j < _out.Capacity; j++) {
+                    for (int j = 0; j < _out.Count; j++) {
                         if (_out[j].ID == population[i].ID) {
                             isUsed = true;
                         }
@@ -126,14 +126,14 @@ public class GeneticAlgorithm
 
         for (int i = 0; i < crossOver; i++)
         {
-            _baby1.weights[i] = _g1.weights[i];
-            _baby2.weights[i] = _g2.weights[i];
+            _baby1.weights.Add(_g1.weights[i]);
+            _baby2.weights.Add(_g2.weights[i]);
         }
 
         for (int i = crossOver; i < totalWeights; i++)
         {
-            _baby1.weights[i] = _g2.weights[i];
-            _baby2.weights[i] = _g1.weights[i];
+            _baby1.weights.Add(_g2.weights[i]);
+            _baby2.weights.Add(_g1.weights[i]);
         }
     }
 
@@ -144,7 +144,7 @@ public class GeneticAlgorithm
         genome.weights.Capacity = _totalWeights;
         for (int i = 0; i < _totalWeights; i++)
         {
-            genome.weights[i] = Random.Range(-1.0f, 1.0f);
+            genome.weights.Add(Random.Range(-1.0f, 1.0f));
         }
         genomeID++;
         return genome;
@@ -172,11 +172,11 @@ public class GeneticAlgorithm
 
     public void BreedPopulation()
     {
-        List<Genome> bestGenomes = null;
+        List<Genome> bestGenomes = new List<Genome>();
         // Find the four best genomes
         GetBestCases(4, ref bestGenomes);
 
-        List<Genome> children = null;
+        List<Genome> children = new List<Genome>();
 
         Genome topGenome = new Genome();
         topGenome.fitness = 0.0f;
@@ -201,7 +201,7 @@ public class GeneticAlgorithm
         int remainingChildren = totalPopulation - children.Capacity;
         for (int i = 0; i < remainingChildren; i++)
         {
-            children.Add(CreateNewGenome(bestGenomes[0].weights.Capacity));
+            children.Add(CreateNewGenome(bestGenomes[0].weights.Count));
         }
 
         ClearPopulation();
@@ -209,24 +209,26 @@ public class GeneticAlgorithm
 
         currentGenome = -1;
         generation++;
+        Debug.Log("Generation = " + generation);
     }
 
     public void ClearPopulation()
     {
         if (population.Count > 0)
         {
-            for (int i = 0; i < population.Capacity; i++) {
+            for (int i = 0; i < population.Count; i++) {
                 if (population[i] != null) {
                     population[i] = null;
                 }
             }
         }
-        population.Clear();
+        // population.Clear();
+        population = new List<Genome>();
     }
 
     private void Mutate(Genome _genome)
     {
-        for (int i = 0; i < _genome.weights.Capacity; i++) {
+        for (int i = 0; i < _genome.weights.Count; i++) {
             float mutationLottery = Random.Range(0f, 100f);
             if (mutationLottery <= 2f) {
                 _genome.weights[i] *= -1;
@@ -242,7 +244,7 @@ public class GeneticAlgorithm
 
     public void SetGenomeFitness(float _fitness, int _index)
     {
-        if (_index >= population.Capacity)
+        if (_index >= population.Count || _index < 0)
         {
             return;
         }

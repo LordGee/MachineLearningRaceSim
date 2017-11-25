@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class AIAgent : MonoBehaviour
+public class AIAgent
 {
 
     private bool hasFailed;
@@ -9,39 +9,49 @@ public class AIAgent : MonoBehaviour
     private NeuralNetwork nn;
     private CarControls cc;
     private InputManager im;
+    private List<float> currentInputs = new List<float>();
+    private float[] currentOutputs = new float[(int)ConstantManager.NNOutputs.OUTPUT_COUNT];
 
-    public void Start()
+    public AIAgent()
     {
         nn = null;
-        cc = FindObjectOfType<CarControls>();
-        im = FindObjectOfType<InputManager>();
+        //cc = FindObjectOfType<CarControls>();
+        //im = FindObjectOfType<InputManager>();
         hasFailed = false;
         distanceDelta = 0.0f;
     }
 
-    void Update()
+    public void ManualUpdate()
     {
         if (!hasFailed)
         {
-            List<float> inputs = null;
-            im.UpdateInputs();
-            for (int i = 0; i < (int)ConstantManager.NNInputs.INPUT_COUNT; i++)
-            {
-                // Todo: get raycast events and add distance to the input list
-                inputs.Add(im.GetInputByIndex(i));
-            }
-            nn.SetInput(inputs);
+            // todo We are going to need to address CC abd IM access
+            // current inputs is prepared by the CarManager via the Entity Manager.
+            nn.SetInput(currentInputs);
             nn.UpdateNN();
 
-            float rightForce = nn.GetOutput((int) ConstantManager.NNOutputs.OUTPUT_TURN_RIGHT);
-            float leftForce = nn.GetOutput((int)ConstantManager.NNOutputs.OUTPUT_TURN_LEFT);
-            float accelerate = nn.GetOutput((int)ConstantManager.NNOutputs.OUTPUT_ACCELERATE);
-            float brake = nn.GetOutput((int)ConstantManager.NNOutputs.OUTPUT_BRAKE);
+            currentOutputs[(int)ConstantManager.NNOutputs.OUTPUT_TURN_RIGHT] = 
+                nn.GetOutput((int) ConstantManager.NNOutputs.OUTPUT_TURN_RIGHT);
+            currentOutputs[(int)ConstantManager.NNOutputs.OUTPUT_TURN_LEFT] = 
+                nn.GetOutput((int)ConstantManager.NNOutputs.OUTPUT_TURN_LEFT);
+            currentOutputs[(int)ConstantManager.NNOutputs.OUTPUT_ACCELERATE] = 
+                nn.GetOutput((int)ConstantManager.NNOutputs.OUTPUT_ACCELERATE);
+            currentOutputs[(int)ConstantManager.NNOutputs.OUTPUT_BRAKE] = 
+                nn.GetOutput((int)ConstantManager.NNOutputs.OUTPUT_BRAKE);
 
-            // todo: update car movement...
-            cc.PerformMovement(rightForce - leftForce, accelerate, (brake > 0), true);
-            Debug.Log("Performed Movement");
+            
         }
+    }
+
+    public void SetInputs(List<float> _inputs)
+    {
+        currentInputs.Clear();
+        currentInputs = _inputs;
+    }
+
+    public float[] GetOutputs()
+    {
+        return currentOutputs;
     }
 
     public float GetDistanceDelta() {
@@ -53,7 +63,7 @@ public class AIAgent : MonoBehaviour
     public void SetPosition()
     {
         // todo: Set car position to spawn point
-
+        
     }
 
     public void CreateNeuralNetwork()
@@ -76,6 +86,11 @@ public class AIAgent : MonoBehaviour
 
     public bool HasAgentFailed() {
         return hasFailed;
+    }
+
+    public void SetFailed()
+    {
+        hasFailed = true;
     }
 
 }

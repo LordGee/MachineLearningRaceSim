@@ -14,16 +14,17 @@ public class NeuralNetwork
     private List<NNLayer> hiddenLayers;
     private NNLayer outputLayer;
     private List<float> outputs;
-    private List<float> weights;
-    private List<Neuron> neurons; 
+    // private List<float> weights;
+    // private List<Neuron> neurons; 
 
     public NeuralNetwork()
     {
-        inputLayer = null;
-        outputLayer = null;
+        inputLayer = new NNLayer();
+        outputLayer = new NNLayer();
         hiddenLayers = new List<NNLayer>();
-        weights = new List<float>();
-        neurons = new List<Neuron>();
+        // weights = new List<float>();
+        // neurons = new List<Neuron>();
+        outputs = new List<float>();
     }
 
     ~NeuralNetwork()
@@ -44,8 +45,8 @@ public class NeuralNetwork
 
     public void UpdateNN()
     {
-        outputs.Clear();
-        for (int i = 0; i < hiddenLayers.Capacity; i++)
+        outputs = new List<float>();
+        for (int i = 0; i < hiddenLayers.Count; i++)
         {
             if (i > 0)
             {
@@ -272,19 +273,19 @@ public class NeuralNetwork
         Genome genome = new Genome();
         for (int i = 0; i < hiddenLayers.Capacity; i++)
         {
-            weights.Clear();
-            hiddenLayers[i].GetWeights(ref weights);
-            for (int j = 0; j < weights.Capacity; j++)
+            List<float> hiddenWeights = new List<float>();
+            hiddenLayers[i].GetWeights(ref hiddenWeights);
+            for (int j = 0; j < hiddenWeights.Capacity; j++)
             {
-                genome.weights.Add(weights[j]);
+                genome.weights.Add(hiddenWeights[j]);
             }
         }
 
-        weights.Clear();
-        outputLayer.GetWeights(ref weights);
-        for (int i = 0; i < weights.Capacity; i++)
+        List<float> outputWeights = new List<float>();
+        outputLayer.GetWeights(ref outputWeights);
+        for (int i = 0; i < outputWeights.Capacity; i++)
         {
-            genome.weights.Add(weights[i]);
+            genome.weights.Add(outputWeights[i]);
         }
 
         return genome;
@@ -295,54 +296,59 @@ public class NeuralNetwork
         ReleaseNN();
         outputAmount = _output;
         inputAmount = _input;
-        int weightsForHidden = _input * _neuronsPerHidden;
+        // int weightsForHidden = _input * _neuronsPerHidden;
         NNLayer hidden = new NNLayer();
-        
-        neurons.Capacity = _neuronsPerHidden;
+        List<Neuron> hiddenNeurons = new List<Neuron>();
+        hiddenNeurons.Capacity = _neuronsPerHidden;
         
         for (int i = 0; i < _neuronsPerHidden; i++)
         {
-            weights.Clear();
+            // weights.Clear();
+            List<float> weights = new List<float>();
             weights.Capacity = _input + 1;
             for (int j = 0; j < _input + 1; j++)
             {
+                if (i * _neuronsPerHidden + j > _genome.weights.Count)
+                {
+                    int z = 0;
+                }
                 weights.Add(_genome.weights[i * _neuronsPerHidden + j]);
             }
 
-            neurons.Add(null);
-            neurons[i] = new Neuron();
-            neurons[i].weights = this.weights;
-            neurons[i].numberOfInputs = _input;
+            hiddenNeurons.Add(null);
+            hiddenNeurons[i] = new Neuron();
+            hiddenNeurons[i].weights = weights;
+            hiddenNeurons[i].numberOfInputs = _input;
 
             // neurons[i].Initilise(weights, _input);
         }
-        hidden.LoadLayer(neurons);
-       
-        
+        hidden.LoadLayer(hiddenNeurons);
         hiddenLayers.Add(hidden);
 
-        int weightsForOutput = _neuronsPerHidden * _output;
-        neurons.Clear();
-        neurons = new List<Neuron>();
-        neurons.Capacity = _output;
+        // int weightsForOutput = _neuronsPerHidden * _output;
+        // neurons.Clear();
+
+        List<Neuron> outputNeurons = new List<Neuron>();
+        outputNeurons.Capacity = _output;
         for (int i = 0; i < _output; i++)
         {
-            weights.Clear();
+            // weights.Clear();
+            List<float> weights = new List<float>();
             weights.Capacity = _neuronsPerHidden + 1;
             for (int j = 0; j < _neuronsPerHidden + 1; j++)
             {
                 weights.Add(_genome.weights[i * _neuronsPerHidden + j]);
             }
 
-            neurons.Add(null);
-            neurons[i] = new Neuron();
-            neurons[i].weights = this.weights;
-            neurons[i].numberOfInputs = _input;
+            outputNeurons.Add(null);
+            outputNeurons[i] = new Neuron();
+            outputNeurons[i].weights = weights;
+            outputNeurons[i].numberOfInputs = _input;
 
             // neurons[i].Initilise(weights, _neuronsPerHidden);
         }
         outputLayer = new NNLayer();
-        outputLayer.LoadLayer(neurons);
+        outputLayer.LoadLayer(outputNeurons);
         
     }
 

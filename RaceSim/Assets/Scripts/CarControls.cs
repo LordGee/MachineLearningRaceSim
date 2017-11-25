@@ -19,9 +19,6 @@ public class CarControls : MonoBehaviour {
     public bool controllerEnabled;
 
     private CarManager cm;
-    // private float motor;
-    // private float steering;
-    // private bool braking;
 
     void Start() {
         GetComponent<Rigidbody>().centerOfMass = centerOfMassCorrection;
@@ -42,11 +39,12 @@ public class CarControls : MonoBehaviour {
             {
                 braking = false;
             }
+            // Debug.Log("Performed Movement");
             PerformMovement(steering, motor,braking, false);
         }
         else
         {
-            // Managed By AI
+            // AI Controlled
         }
         
     }
@@ -76,6 +74,7 @@ public class CarControls : MonoBehaviour {
 
     public void PerformMovement(float _steering, float _motor, bool _braking, bool _ai)
     {
+        // print("Steering: " + _steering + " - Motor: " + _motor + " - Brake: " + _braking);
         if (_ai)
         {
             _steering = maximumSteeringAngle * _steering;

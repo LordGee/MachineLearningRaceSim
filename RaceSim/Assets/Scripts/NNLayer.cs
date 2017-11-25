@@ -21,7 +21,7 @@ public class NNLayer
         for (int i = 0; i < totalNeurons; i++)
         {
             float activation = 0.0f;
-            for (int j = 0; j < neurons[i].numberOfInputs; j++)
+            for (int j = 0; j < neurons[i].numberOfInputs - 1; j++)
             {
                 activation += _input[inputIndex] * neurons[i].weights[j];
                 inputIndex++;

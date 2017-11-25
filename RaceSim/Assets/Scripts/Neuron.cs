@@ -8,7 +8,7 @@ public class Neuron {
     public List<float> weights { get; set; }
 
     public Neuron() {
-        numberOfInputs = -1;
+        numberOfInputs = 0;
         weights = new List<float>();
     }
 

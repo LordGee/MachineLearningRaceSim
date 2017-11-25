@@ -25,7 +25,7 @@ public class InputManager : MonoBehaviour
 
     public void UpdateInputs() {
         GetDirection();
-        GetAcceleration();
+        // GetAcceleration();
         CastAllRays();
     }
 
@@ -41,22 +41,26 @@ public class InputManager : MonoBehaviour
     public void GetDirection()
     {
         float radianOrientation = (-transform.rotation.eulerAngles.y + 90f) * Mathf.PI / 180;
-        
+        raycastInfo = new RaycastInfo[(int)ConstantManager.NNInputs.INPUT_COUNT];
+
         //Front
         float radian = radianOrientation;
-        raycastInfo[(int)ConstantManager.NNInputs.RAYCAST_FORWARD].position = new Vector3(CosX(radian, ConstantManager.RAY_LENGTH), 0f, SinX(radian, ConstantManager.RAY_LENGTH));
+        raycastInfo[(int)ConstantManager.NNInputs.RAYCAST_FORWARD].position = 
+            new Vector3(CosX(radian, ConstantManager.RAY_LENGTH), 0f, SinX(radian, ConstantManager.RAY_LENGTH));
 
         //FrontRight
         radian = radianOrientation - GetRadian(0.25f);
-        raycastInfo[(int)ConstantManager.NNInputs.RAYCAST_FORWARD_RIGHT].position = new Vector3(CosX(radian, ConstantManager.RAY_LENGTH), 0, SinX(radian, ConstantManager.RAY_LENGTH));
+        raycastInfo[(int)ConstantManager.NNInputs.RAYCAST_FORWARD_RIGHT].position = 
+            new Vector3(CosX(radian, ConstantManager.RAY_LENGTH), 0, SinX(radian, ConstantManager.RAY_LENGTH));
 
         //FrontLeft
         radian = radianOrientation + GetRadian(0.25f);
-        raycastInfo[(int)ConstantManager.NNInputs.RAYCAST_FORWARD_LEFT].position = new Vector3(CosX(radian, ConstantManager.RAY_LENGTH), 0, SinX(radian, ConstantManager.RAY_LENGTH));
+        raycastInfo[(int)ConstantManager.NNInputs.RAYCAST_FORWARD_LEFT].position = 
+            new Vector3(CosX(radian, ConstantManager.RAY_LENGTH), 0, SinX(radian, ConstantManager.RAY_LENGTH));
 
     }
 
-    private void GetAcceleration()
+    public float GetAcceleration()
     {
         if (GetComponent<Rigidbody>().velocity.magnitude > 0.1)
         {
@@ -66,6 +70,7 @@ public class InputManager : MonoBehaviour
         {
             acceleration = 0f;
         }
+        return acceleration;
     }
 
     private void CastAllRays()
