@@ -154,7 +154,7 @@ public class GeneticAlgorithm
     {
         generation = 1;
         ClearPopulation();
-        currentGenome = -1;
+        currentGenome = 0;
         totalPopulation = _newTotalPopulation;
         population.Capacity = _newTotalPopulation;
         for (int i = 0; i < population.Capacity; i++) {
@@ -168,6 +168,7 @@ public class GeneticAlgorithm
             genomeID++;
             population.Add(genome);
         }
+        EventManagerOneArg.TriggerEvent(ConstantManager.UI_GENERATION, generation);
     }
 
     public void BreedPopulation()
@@ -182,13 +183,16 @@ public class GeneticAlgorithm
         topGenome.fitness = 0.0f;
         topGenome.ID = bestGenomes[0].ID;
         topGenome.weights = bestGenomes[0].weights;
+        children.Add(topGenome); // Add original top without mutation
+        topGenome.ID = genomeID;
+        genomeID++;
         Mutate(topGenome);
-        children.Add(topGenome);
+        children.Add(topGenome); // After mutation
 
         Genome child1 = null;
         Genome child2 = null;
-
-        for (int i = 0; i < 2; i++) {
+        int crossBreedIteration = Mathf.Abs((ConstantManager.MAXIMUM_GENOME_POPULATION - children.Count) / (bestGenomes.Count + 2));
+        for (int i = 0; i < crossBreedIteration; i++) {
             for (int j = 1; j < bestGenomes.Count; j++) {
                 CrossBreed(bestGenomes[i], bestGenomes[j], ref child1, ref child2);
                 Mutate(child1);
@@ -207,9 +211,9 @@ public class GeneticAlgorithm
         ClearPopulation();
         population = children;
 
-        currentGenome = -1;
+        currentGenome = 0;
         generation++;
-        Debug.Log("Generation = " + generation);
+        EventManagerOneArg.TriggerEvent(ConstantManager.UI_GENERATION, generation);
     }
 
     public void ClearPopulation()

@@ -3,7 +3,7 @@
 public class ConstantManager
 {
 
-    public const int MAXIMUM_GENOME_POPULATION = 12;
+    public const int MAXIMUM_GENOME_POPULATION = 20;
     //public const int INVALID_ID = -1;
     //public const int MAX_POPULATION = 15;
     public const int HIDDEN_LAYER_NEURONS = 8;
@@ -42,4 +42,9 @@ public class ConstantManager
 
     public const float BIAS = -1.0f;
     // public enum EvaluationFunction { EVAL_SIGMOID, EVAL_STEP, EVAL_BIPOLAR };
+
+
+    public const string UI_GENERATION = "Generation";
+    public const string UI_POPULATION = "Population";
+    public const string UI_FITNESS = "Fitness";
 }

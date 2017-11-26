@@ -90,7 +90,6 @@ public class EntityManager
     }
 
     private int counter;
-    private int errorCounter;
     public void ManualUpdate() {
         testAiAgent.SetInputs(inputs);
         testAiAgent.ManualUpdate();
@@ -100,16 +99,17 @@ public class EntityManager
             AgentFailed();
             counter = 0; 
         }
-        if (testAiAgent.HasAgentFailed()) {
-            Debug.Log("Failed");
-            errorCounter++;
-            ForceToNextAgent();
-        }
+
         if (newFitness == 0) { counter++; }
         else { counter = 0; }
         currentFitness += newFitness / 2.0f;
+        EventManagerOneArg.TriggerEvent(ConstantManager.UI_FITNESS, currentFitness);
         if (currentFitness > bestFitness) {
             bestFitness = currentFitness;
+        }
+        if (testAiAgent.HasAgentFailed()) {
+            EventManagerOneArg.TriggerEvent(ConstantManager.UI_POPULATION, currentFitness);
+            ForceToNextAgent();
         }
         // Debug.Log(currentFitness);
     }

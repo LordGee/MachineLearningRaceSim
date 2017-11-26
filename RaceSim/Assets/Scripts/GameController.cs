@@ -35,7 +35,7 @@ public class GameController : MonoBehaviour {
         gameTimer = 0f;
         if (GameObject.FindGameObjectsWithTag("Player").Length <= 1)
         {
-            GameObject newCar = Instantiate(car, spawnPoint, Quaternion.AngleAxis(90f, Vector3.up));
+            Instantiate(car, spawnPoint, Quaternion.AngleAxis(90f, Vector3.up));
         }
     }
 

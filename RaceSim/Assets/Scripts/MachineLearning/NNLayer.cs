@@ -6,11 +6,10 @@ using UnityEngine;
 public class NNLayer
 {
 
-    private int totalNeurons, totalInputs;
+    private int totalNeurons;
     private List<Neuron> neurons;
 
     public NNLayer() {
-        totalInputs = -1;
         totalNeurons = -1;
         neurons = new List<Neuron>();
     }
@@ -63,7 +62,6 @@ public class NNLayer
 
     public void PopulateLayer(int _neurons, int _inputs)
     {
-        totalInputs = _inputs;
         totalNeurons = _neurons;
         neurons.Capacity = _inputs;
         for (int i = 0; i < neurons.Count; i++)
@@ -75,7 +73,6 @@ public class NNLayer
     public void SetWeights(List<float> _weights, int _neurons, int _inputs)
     {
         int index = 0;
-        totalInputs = _inputs;
         totalNeurons = _neurons;
         neurons.Capacity = _neurons;
         for (int i = 0; i < _neurons; i++)
@@ -109,7 +106,6 @@ public class NNLayer
 
     public void SetNeurons(List<Neuron> _neurons, int _numberNeurons, int _inputs)
     {
-        totalInputs = _inputs;
         totalNeurons = _numberNeurons;
         neurons = _neurons;
     }

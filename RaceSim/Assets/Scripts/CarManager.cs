@@ -11,7 +11,7 @@ public class CarManager : MonoBehaviour {
 
     [SerializeField] public bool machineAI;
 
-    void Start() {
+    void Awake() {
         gameControl = FindObjectOfType<GameController>();
         cc = FindObjectOfType<CarControls>();
         im = GetComponent<InputManager>();
