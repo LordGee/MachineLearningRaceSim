@@ -111,7 +111,6 @@ public class EntityManager
             EventManagerOneArg.TriggerEvent(ConstantManager.UI_POPULATION, currentFitness);
             ForceToNextAgent();
         }
-        // Debug.Log(currentFitness);
     }
 
     public void PrepareInputs(List<float> _currentInputs) { inputs = _currentInputs; }

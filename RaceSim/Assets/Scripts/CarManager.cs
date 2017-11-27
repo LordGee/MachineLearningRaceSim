@@ -58,6 +58,11 @@ public class CarManager : MonoBehaviour {
         }
     }
 
+    private IEnumerator DelayRespawn() {
+        yield return new WaitForSeconds(0.1f);
+        // StartCoroutine(DelayRespawn());
+    }
+
     void OnTriggerEnter(Collider col)
     {
         if (col.transform.tag == "FinishLine") {
@@ -72,9 +77,11 @@ public class CarManager : MonoBehaviour {
 
     public void ResetPosition(Vector3 _pos, Quaternion _quat)
     {
-        transform.position = _pos;
-        GetComponent<Rigidbody>().velocity = new Vector3(0f, 0f, 0f);
         cc.CompleteStop();
+        GetComponent<Rigidbody>().velocity = new Vector3(0f, 0f, 0f);
+        GetComponent<Rigidbody>().angularVelocity = new Vector3(0f, 0f, 0f);
+        GetComponent<Rigidbody>().drag = 0f;
+        transform.position = _pos;
         transform.rotation = _quat;
     }
 }

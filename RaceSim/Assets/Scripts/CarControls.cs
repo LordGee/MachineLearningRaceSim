@@ -49,29 +49,6 @@ public class CarControls : MonoBehaviour {
         
     }
 
-    private void PerformMovement()
-    {
-        /*
-        foreach (WheelSet wheels in wheelSets) {
-            if (wheels.steering) {
-                wheels.leftWheel.steerAngle = steering;
-                wheels.rightWheel.steerAngle = steering;
-            }
-            if (wheels.motor) {
-                wheels.leftWheel.motorTorque = motor;
-                wheels.rightWheel.motorTorque = motor;
-            }
-            if (braking) {
-                wheels.leftWheel.brakeTorque = brakeForce;
-                wheels.rightWheel.brakeTorque = brakeForce;
-            } else {
-                wheels.leftWheel.brakeTorque = 0;
-                wheels.rightWheel.brakeTorque = 0;
-            }
-        }
-        */
-    }
-
     public void PerformMovement(float _steering, float _motor, bool _braking, bool _ai)
     {
         // print("Steering: " + _steering + " - Motor: " + _motor + " - Brake: " + _braking);
@@ -103,6 +80,7 @@ public class CarControls : MonoBehaviour {
 
     public void CompleteStop()
     {
+        PerformMovement(0f, 0f, true, false);
         foreach (WheelSet wheels in wheelSets)
         {
             wheels.leftWheel.steerAngle = 0f;

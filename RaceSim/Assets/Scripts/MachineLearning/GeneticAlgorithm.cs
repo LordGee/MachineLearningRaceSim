@@ -88,7 +88,7 @@ public class GeneticAlgorithm
             // Find the best cases for cross breeding based on fitness score.
             float bestFitness = 0;
             int bestIndex = -1;
-            for (int i = 0; i < totalPopulation; i++) {
+            for (int i = 0; i < population.Count; i++) {
                 if (population[i].fitness > bestFitness) {
                     bool isUsed = false;
                     for (int j = 0; j < _out.Count; j++) {
@@ -184,10 +184,22 @@ public class GeneticAlgorithm
         topGenome.ID = bestGenomes[0].ID;
         topGenome.weights = bestGenomes[0].weights;
         children.Add(topGenome); // Add original top without mutation
+
+        topGenome = new Genome();
+        topGenome.fitness = 0.0f;
+        topGenome.weights = bestGenomes[0].weights;
         topGenome.ID = genomeID;
         genomeID++;
         Mutate(topGenome);
         children.Add(topGenome); // After mutation
+
+        topGenome = new Genome();
+        topGenome.fitness = 0.0f;
+        topGenome.weights = bestGenomes[1].weights;
+        topGenome.ID = genomeID;
+        genomeID++;
+        Mutate(topGenome);
+        children.Add(topGenome); // Add Second top genome with mutation
 
         Genome child1 = null;
         Genome child2 = null;
@@ -202,7 +214,7 @@ public class GeneticAlgorithm
             }
         }
 
-        int remainingChildren = totalPopulation - children.Capacity;
+        int remainingChildren = totalPopulation - children.Count;
         for (int i = 0; i < remainingChildren; i++)
         {
             children.Add(CreateNewGenome(bestGenomes[0].weights.Count));
