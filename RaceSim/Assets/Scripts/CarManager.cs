@@ -21,10 +21,18 @@ public class CarManager : MonoBehaviour {
         }
     }
 
-    void FixedUpdate()
+    private float timeSpeed = 1f;
+    void Update()
     {
+        Time.timeScale = timeSpeed;
+
         if (machineAI)
         {
+            if (Input.GetKeyDown("1")) { timeSpeed = 1; }
+            if (Input.GetKeyDown("2")) { timeSpeed = 2; }
+            if (Input.GetKeyDown("3")) { timeSpeed = 3; }
+            if (Input.GetKeyDown("4")) { timeSpeed = 4; }
+
             im.UpdateInputs();
 
             List<float> currentInputs = new List<float>();

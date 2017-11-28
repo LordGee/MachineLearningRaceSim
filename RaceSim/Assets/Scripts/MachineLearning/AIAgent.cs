@@ -7,8 +7,6 @@ public class AIAgent
     private bool hasFailed;
     private float distanceDelta;
     private NeuralNetwork nn;
-    private CarControls cc;
-    private InputManager im;
     private List<float> currentInputs = new List<float>();
     private float[] currentOutputs = new float[(int)ConstantManager.NNOutputs.OUTPUT_COUNT];
 
@@ -60,11 +58,6 @@ public class AIAgent
         return distanceDelta;
     }
 
-    public void SetPosition()
-    {
-        // todo: Set car position to spawn point
-        
-    }
 
     public void CreateNeuralNetwork()
     {

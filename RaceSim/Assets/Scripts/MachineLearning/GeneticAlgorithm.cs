@@ -5,10 +5,11 @@ using UnityEngine;
 public class GeneticAlgorithm
 {
 
-    private int currentGenome, genomeID, generation, totalGenomeWeight;
+    private int currentGenome, genomeID, generation;
     private int totalPopulation;
     private List<Genome> population;
-    private int[] crossoverSplits;
+    private float bestEverFitness;
+    private Genome bestEverGenome;
 
     public GeneticAlgorithm()
     {
@@ -17,6 +18,7 @@ public class GeneticAlgorithm
         genomeID = 0;
         generation = 1;
         population = new List<Genome>();
+        bestEverFitness = 0f;
     }
 
     ~GeneticAlgorithm()
@@ -107,6 +109,12 @@ public class GeneticAlgorithm
                 _out.Add(population[bestIndex]);
             }
         }
+        if (_out[0].fitness > bestEverFitness)
+        {
+            bestEverFitness = _out[0].fitness;
+            bestEverGenome = new Genome();
+            bestEverGenome = _out[0];
+        }
     }
 
     private void CrossBreed(Genome _g1, Genome _g2, ref Genome _baby1, ref Genome _baby2)
@@ -171,6 +179,16 @@ public class GeneticAlgorithm
         EventManagerOneArg.TriggerEvent(ConstantManager.UI_GENERATION, generation);
     }
 
+    private Genome SetUpTopGenome(ref Genome _g, Genome _add)
+    {
+        _g = new Genome();
+        _g.fitness = 0.0f;
+        _g.ID = genomeID;
+        genomeID++;
+        _g.weights = _add.weights;
+        return _g;
+    }
+
     public void BreedPopulation()
     {
         List<Genome> bestGenomes = new List<Genome>();
@@ -180,26 +198,18 @@ public class GeneticAlgorithm
         List<Genome> children = new List<Genome>();
 
         Genome topGenome = new Genome();
-        topGenome.fitness = 0.0f;
-        topGenome.ID = bestGenomes[0].ID;
-        topGenome.weights = bestGenomes[0].weights;
-        children.Add(topGenome); // Add original top without mutation
 
-        topGenome = new Genome();
-        topGenome.fitness = 0.0f;
-        topGenome.weights = bestGenomes[0].weights;
-        topGenome.ID = genomeID;
-        genomeID++;
-        Mutate(topGenome);
-        children.Add(topGenome); // After mutation
+        // Add best ever genome without mutation
+        SetUpTopGenome(ref topGenome, bestEverGenome);
+        children.Add(topGenome);
 
-        topGenome = new Genome();
-        topGenome.fitness = 0.0f;
-        topGenome.weights = bestGenomes[1].weights;
-        topGenome.ID = genomeID;
-        genomeID++;
-        Mutate(topGenome);
-        children.Add(topGenome); // Add Second top genome with mutation
+        // Add best four after mutation
+        for (int i = 0; i < bestGenomes.Count; i++)
+        {
+            SetUpTopGenome(ref topGenome, bestGenomes[i]);
+            Mutate(topGenome);
+            children.Add(topGenome);
+        }
 
         Genome child1 = null;
         Genome child2 = null;

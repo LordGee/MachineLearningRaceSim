@@ -6,10 +6,8 @@ using UnityEngine;
 public class EntityManager
 {
     private AIAgent testAiAgent;
-    private List<AIAgent> agents;
     private float currentFitness;
     private float bestFitness;
-    private float currentTimer;
     private int totalWeights;
 
     private NeuralNetwork nn;
