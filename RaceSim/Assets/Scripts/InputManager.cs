@@ -49,6 +49,16 @@ public class InputManager : MonoBehaviour
             new Vector3(CosX(radian, ConstantManager.RAY_LENGTH), 0f, SinX(radian, ConstantManager.RAY_LENGTH));
 
         //FrontRight
+        radian = radianOrientation - GetRadian(0.08f);
+        raycastInfo[(int)ConstantManager.NNInputs.RAYCAST_FORWARD_FORWARD_RIGHT].position =
+            new Vector3(CosX(radian, ConstantManager.RAY_LENGTH), 0, SinX(radian, ConstantManager.RAY_LENGTH));
+
+        //FrontLeft
+        radian = radianOrientation + GetRadian(0.08f);
+        raycastInfo[(int)ConstantManager.NNInputs.RAYCAST_FORWARD_FORWARD_LEFT].position =
+            new Vector3(CosX(radian, ConstantManager.RAY_LENGTH), 0, SinX(radian, ConstantManager.RAY_LENGTH));
+
+        //FrontRight
         radian = radianOrientation - GetRadian(0.25f);
         raycastInfo[(int)ConstantManager.NNInputs.RAYCAST_FORWARD_RIGHT].position = 
             new Vector3(CosX(radian, ConstantManager.RAY_LENGTH), 0, SinX(radian, ConstantManager.RAY_LENGTH));
@@ -58,6 +68,15 @@ public class InputManager : MonoBehaviour
         raycastInfo[(int)ConstantManager.NNInputs.RAYCAST_FORWARD_LEFT].position = 
             new Vector3(CosX(radian, ConstantManager.RAY_LENGTH), 0, SinX(radian, ConstantManager.RAY_LENGTH));
 
+        //FrontRight
+        radian = radianOrientation - GetRadian(1.5708f);
+        raycastInfo[(int)ConstantManager.NNInputs.RAYCAST_RIGHT].position =
+            new Vector3(CosX(radian, ConstantManager.RAY_LENGTH), 0, SinX(radian, ConstantManager.RAY_LENGTH));
+
+        //FrontLeft
+        radian = radianOrientation + GetRadian(1.5708f);
+        raycastInfo[(int)ConstantManager.NNInputs.RAYCAST_LEFT].position =
+            new Vector3(CosX(radian, ConstantManager.RAY_LENGTH), 0, SinX(radian, ConstantManager.RAY_LENGTH));
     }
 
     public float GetAcceleration()

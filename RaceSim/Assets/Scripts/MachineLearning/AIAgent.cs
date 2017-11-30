@@ -23,8 +23,6 @@ public class AIAgent
     {
         if (!hasFailed)
         {
-            // todo We are going to need to address CC abd IM access
-            // current inputs is prepared by the CarManager via the Entity Manager.
             nn.SetInput(currentInputs);
             nn.UpdateNN();
 

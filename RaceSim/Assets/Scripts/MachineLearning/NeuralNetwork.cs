@@ -2,8 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Random = UnityEngine.Random;
-
 
 public class NeuralNetwork
 {
@@ -31,7 +29,7 @@ public class NeuralNetwork
         if (outputLayer != null) {
             outputLayer = null;
         }
-        for (int i = 0; i < hiddenLayers.Capacity; i++) {
+        for (int i = 0; i < hiddenLayers.Count; i++) {
             if (hiddenLayers[i] != null) {
                 hiddenLayers[i] = null;
             }

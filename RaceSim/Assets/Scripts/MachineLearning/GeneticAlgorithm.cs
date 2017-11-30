@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 public class GeneticAlgorithm
@@ -109,6 +110,7 @@ public class GeneticAlgorithm
                 _out.Add(population[bestIndex]);
             }
         }
+        Debug.Log(generation + " - " + _out[0].fitness);
         if (_out[0].fitness > bestEverFitness)
         {
             bestEverFitness = _out[0].fitness;
@@ -179,7 +181,7 @@ public class GeneticAlgorithm
         EventManagerOneArg.TriggerEvent(ConstantManager.UI_GENERATION, generation);
     }
 
-    private Genome SetUpTopGenome(ref Genome _g, Genome _add)
+    public Genome SetUpTopGenome(ref Genome _g, Genome _add)
     {
         _g = new Genome();
         _g.fitness = 0.0f;
@@ -199,10 +201,6 @@ public class GeneticAlgorithm
 
         Genome topGenome = new Genome();
 
-        // Add best ever genome without mutation
-        SetUpTopGenome(ref topGenome, bestEverGenome);
-        children.Add(topGenome);
-
         // Add best four after mutation
         for (int i = 0; i < bestGenomes.Count; i++)
         {
@@ -210,6 +208,11 @@ public class GeneticAlgorithm
             Mutate(topGenome);
             children.Add(topGenome);
         }
+
+        // Add best ever genome without mutation
+        SetUpTopGenome(ref topGenome, bestEverGenome);
+        children.Add(topGenome);
+        Debug.Log(bestEverGenome.weights[0]);
 
         Genome child1 = null;
         Genome child2 = null;

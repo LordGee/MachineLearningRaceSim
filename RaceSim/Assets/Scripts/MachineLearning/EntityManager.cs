@@ -14,7 +14,7 @@ public class EntityManager
     private GeneticAlgorithm ga;
     private List<float> inputs;
     private float[] outputs;
-    private float newFitness;
+    private float newFitness, timeScale;
     private bool resetPosition;
 
     public EntityManager()
@@ -100,7 +100,7 @@ public class EntityManager
 
         if (newFitness == 0) { counter++; }
         else { counter = 0; }
-        currentFitness += newFitness / 2.0f;
+        currentFitness += (newFitness / 2.0f) * timeScale;
         EventManagerOneArg.TriggerEvent(ConstantManager.UI_FITNESS, currentFitness);
         if (currentFitness > bestFitness) {
             bestFitness = currentFitness;
@@ -113,10 +113,15 @@ public class EntityManager
 
     public void PrepareInputs(List<float> _currentInputs) { inputs = _currentInputs; }
     public float[] GetCurrentOutputs() { return outputs; }
-    public void SetNewFitness(float _fit) { newFitness = _fit; }
+
+    public void SetNewFitness(float _fit, float _timeScale)
+    {
+        newFitness = _fit;
+        timeScale = _timeScale;
+    }
     public void AddCompletionFitness(float _value) { currentFitness += _value; }
     public void AgentFailed() { testAiAgent.SetFailed(); }
     public bool GetResetPosition() { return resetPosition; }
     public void CompleteResetPosition() { resetPosition = false; }
-
+    
 }

@@ -3,8 +3,8 @@
 public class ConstantManager
 {
 
-    public const int MAXIMUM_GENOME_POPULATION = 20;
-    public const int HIDDEN_LAYER_NEURONS = 16;
+    public const int MAXIMUM_GENOME_POPULATION = 18;
+    public const int HIDDEN_LAYER_NEURONS = 8;
     public const int NUMBER_OF_HIDDEN_LAYERS = 1;
 
     public const float RAY_LENGTH = 100f;
@@ -22,8 +22,12 @@ public class ConstantManager
     public enum NNInputs
     {
         RAYCAST_FORWARD,
+        RAYCAST_FORWARD_FORWARD_RIGHT,
+        RAYCAST_FORWARD_FORWARD_LEFT,
         RAYCAST_FORWARD_RIGHT,
         RAYCAST_FORWARD_LEFT,
+        RAYCAST_RIGHT,
+        RAYCAST_LEFT,
         ACCELERATION,
 
         INPUT_COUNT

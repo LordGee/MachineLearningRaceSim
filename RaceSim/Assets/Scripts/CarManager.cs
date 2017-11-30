@@ -21,7 +21,7 @@ public class CarManager : MonoBehaviour {
         }
     }
 
-    private float timeSpeed = 1f;
+    public static float timeSpeed = 1f;
     void Update()
     {
         Time.timeScale = timeSpeed;
@@ -43,14 +43,13 @@ public class CarManager : MonoBehaviour {
 
             em.PrepareInputs(currentInputs);
             em.ManualUpdate();
-            // todo pass into the em, the distance / speed since the last update to provide fitness
             float[] newOutputs = em.GetCurrentOutputs();
             cc.PerformMovement(
                 newOutputs[(int)ConstantManager.NNOutputs.OUTPUT_TURN_RIGHT] - newOutputs[(int)ConstantManager.NNOutputs.OUTPUT_TURN_LEFT], 
                 newOutputs[(int)ConstantManager.NNOutputs.OUTPUT_ACCELERATE], 
                 (newOutputs[(int)ConstantManager.NNOutputs.OUTPUT_BRAKE] > 0.5), 
                 true);
-            em.SetNewFitness(im.GetAcceleration());
+            em.SetNewFitness(im.GetAcceleration(), timeSpeed);
             if (em.GetResetPosition())
             {
                 gameControl.ResetCar(); 
