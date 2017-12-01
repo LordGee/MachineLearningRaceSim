@@ -5,7 +5,6 @@ public class AIAgent
 {
 
     private bool hasFailed;
-    private float distanceDelta;
     private NeuralNetwork nn;
     private List<float> currentInputs = new List<float>();
     private float[] currentOutputs = new float[(int)ConstantManager.NNOutputs.OUTPUT_COUNT];
@@ -13,10 +12,7 @@ public class AIAgent
     public AIAgent()
     {
         nn = null;
-        //cc = FindObjectOfType<CarControls>();
-        //im = FindObjectOfType<InputManager>();
         hasFailed = false;
-        distanceDelta = 0.0f;
     }
 
     public void ManualUpdate()
@@ -49,13 +45,6 @@ public class AIAgent
     {
         return currentOutputs;
     }
-
-    public float GetDistanceDelta() {
-
-        // distanceDelta = heading.Magnitude(); ?
-        return distanceDelta;
-    }
-
 
     public void CreateNeuralNetwork()
     {

@@ -48,7 +48,7 @@ public class EntityManager
     } 
 
     public void ExportCurrentAgent() {
-        testAiAgent.GetNeuralNetwork().ExportNN("NeuralNetwork-" + DateTime.UtcNow.ToShortDateString() + ".txt");
+        testAiAgent.GetNeuralNetwork().ExportNN(@"C:\GameProjects\MachineLearningRaceSim\RaceSim\Assets\Data\best.csv");
     }
 
     public void NextTestSubject() {
@@ -102,11 +102,14 @@ public class EntityManager
         else { counter = 0; }
         currentFitness += (newFitness / 2.0f) * timeScale;
         EventManagerOneArg.TriggerEvent(ConstantManager.UI_FITNESS, currentFitness);
-        if (currentFitness > bestFitness) {
-            bestFitness = currentFitness;
-        }
         if (testAiAgent.HasAgentFailed()) {
+            if (currentFitness > bestFitness) {
+                bestFitness = currentFitness;
+                ExportCurrentAgent();
+                Debug.Log("EXPORTING");
+            }
             EventManagerOneArg.TriggerEvent(ConstantManager.UI_POPULATION, currentFitness);
+            
             ForceToNextAgent();
         }
     }

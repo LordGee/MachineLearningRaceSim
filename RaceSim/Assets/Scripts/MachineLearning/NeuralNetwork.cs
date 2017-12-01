@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using UnityEngine;
 
 public class NeuralNetwork
@@ -73,6 +75,20 @@ public class NeuralNetwork
 
     public void ExportNN(string _filename)
     {
+        TextWriter write = new StreamWriter(_filename);
+        write.WriteLine(inputAmount);
+        write.WriteLine(outputAmount);
+        // Hidden Layers
+        write.WriteLine(hiddenLayers.Count);
+        for (int i = 0; i < hiddenLayers.Count; i++) {
+            hiddenLayers[i].SaveLayer(ref write);
+        }
+        // Outer Layer
+        outputLayer.SaveLayer(ref write);
+        write.Dispose();
+
+
+    
         /*
          char buff[128] = {0};
 		sprintf(buff, "ExportedNNs/%s", filename);

@@ -49,7 +49,7 @@ public class CarManager : MonoBehaviour {
                 newOutputs[(int)ConstantManager.NNOutputs.OUTPUT_ACCELERATE], 
                 (newOutputs[(int)ConstantManager.NNOutputs.OUTPUT_BRAKE] > 0.5), 
                 true);
-            em.SetNewFitness(im.GetAcceleration(), timeSpeed);
+            em.SetNewFitness(im.GetAcceleration() * Time.deltaTime, timeSpeed);
             if (em.GetResetPosition())
             {
                 gameControl.ResetCar(); 

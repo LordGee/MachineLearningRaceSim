@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class NNLayer
@@ -31,8 +32,15 @@ public class NNLayer
         }
     }
 
-    public void SaveLayer()
+    public void SaveLayer(ref TextWriter _file)
     {
+        _file.WriteLine(neurons.Count);
+        for (int i = 0; i < neurons.Count; i++) {
+            _file.WriteLine(neurons[i].weights.Count);
+            for (int j = 0; j < neurons[i].weights.Count; j++) {
+                _file.WriteLine(neurons[i].weights[j]);
+            }
+        }
         /*
          fileOut << "<NLayer>" << std::endl;
 		fileOut << "Type=" << layerType << std::endl;
