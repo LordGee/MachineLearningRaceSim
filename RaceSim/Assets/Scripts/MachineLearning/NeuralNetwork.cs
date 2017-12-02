@@ -75,44 +75,70 @@ public class NeuralNetwork
 
     public void ExportNN(string _filename)
     {
-        TextWriter write = new StreamWriter(_filename);
-        write.WriteLine(inputAmount);
-        write.WriteLine(outputAmount);
+        TextWriter file = new StreamWriter(_filename);
+        file.WriteLine(inputAmount);
+        file.WriteLine(outputAmount);
         // Hidden Layers
-        write.WriteLine(hiddenLayers.Count);
+        file.WriteLine(hiddenLayers.Count);
         for (int i = 0; i < hiddenLayers.Count; i++) {
-            hiddenLayers[i].SaveLayer(ref write);
+            hiddenLayers[i].SaveLayer(ref file);
         }
         // Outer Layer
-        outputLayer.SaveLayer(ref write);
-        write.Dispose();
+        outputLayer.SaveLayer(ref file);
+        file.Dispose();
 
-
-    
-        /*
-         char buff[128] = {0};
-		sprintf(buff, "ExportedNNs/%s", filename);
-		std::ofstream file;
-		file.open(buff);
-
-		file << "<NeuralNetwork>" << endl;
-		file <<"TotalOuputs=" << this->outputAmount << endl;
-		file <<"TotalInputs=" << this->inputAmount << endl;
-		// Export hidden layerss.
-		for (unsigned int i = 0; i < hiddenLayers.size(); i++)
-		{
-			hiddenLayers[i]->SaveLayer(file, "Hidden");
-		}
-		// Export output layer.
-		outputLayer->SaveLayer(file, "Output");
-		file << "</NeuralNetwork>" << endl;
-
-		file.close();
-         */
     }
 
     public void ImportNN(string _filename)
     {
+        TextReader file = new StreamReader(_filename);
+        if (file != null) {
+            float weight = 0.0f;
+            int totalHidden = 0;
+            int totalNeurons = 0;
+            int totalWeights = 0;
+            List<Neuron> neurons = new List<Neuron>();
+
+            inputAmount = Convert.ToInt32(file.ReadLine());
+            outputAmount = Convert.ToInt32(file.ReadLine());
+
+            // Hidden Layer
+            totalHidden = Convert.ToInt32(file.ReadLine());
+            for (int i = 0; i < totalHidden; i++) {
+                totalNeurons = Convert.ToInt32(file.ReadLine());
+                neurons.Capacity = totalNeurons;
+                for (int j = 0; j < totalNeurons; j++) {
+                    totalWeights = Convert.ToInt32(file.ReadLine());
+                    neurons[j].weights.Capacity = totalWeights;
+                    for (int k = 0; k < totalWeights; k++) {
+                        weight = float.Parse(file.ReadLine());
+                        neurons[j].weights[k] = weight;
+                    }
+                }
+            }
+            NNLayer hLayer = new NNLayer();
+            hLayer.SetNeurons(neurons, neurons.Count, inputAmount);
+            hiddenLayers.Add(hLayer);
+
+            // Output Layer
+            totalNeurons = Convert.ToInt32(file.ReadLine());
+            neurons = new List<Neuron>();
+            neurons.Capacity = totalNeurons;
+            for (int j = 0; j < totalNeurons; j++) {
+                totalWeights = Convert.ToInt32(file.ReadLine());
+                neurons[j].weights.Capacity = totalWeights;
+                for (int k = 0; k < totalWeights; k++) {
+                    weight = float.Parse(file.ReadLine());
+                    neurons[j].weights[k] = weight;
+                }
+            }
+            NNLayer oLayer = new NNLayer();
+            oLayer.SetNeurons(neurons, neurons.Count, inputAmount);
+            hiddenLayers.Add(oLayer);
+
+            file.Dispose();            
+        }
+
         /*
          		FILE* file = fopen(filename,"rt");
 

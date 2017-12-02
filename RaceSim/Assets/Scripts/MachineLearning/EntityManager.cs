@@ -48,7 +48,12 @@ public class EntityManager
     } 
 
     public void ExportCurrentAgent() {
-        testAiAgent.GetNeuralNetwork().ExportNN(@"C:\GameProjects\MachineLearningRaceSim\RaceSim\Assets\Data\best.csv");
+        // testAiAgent.GetNeuralNetwork().ExportNN(@"C:\GameProjects\MachineLearningRaceSim\RaceSim\Assets\Data\best.csv");
+        testAiAgent.GetNeuralNetwork().ExportNN(@"~\..\Assets\Data\best.csv");
+    }
+
+    public void ImportExistingAgent() {
+        testAiAgent.GetNeuralNetwork().ImportNN(@"~\..\Assets\Data\best.csv");
     }
 
     public void NextTestSubject() {
