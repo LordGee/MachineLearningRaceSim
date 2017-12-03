@@ -3,7 +3,7 @@
 public class ConstantManager
 {
 
-    public const int MAXIMUM_GENOME_POPULATION = 18;
+    public const int MAXIMUM_GENOME_POPULATION = 10;
     public const int HIDDEN_LAYER_NEURONS = 8;
     public const int NUMBER_OF_HIDDEN_LAYERS = 1;
 
