@@ -212,7 +212,6 @@ public class GeneticAlgorithm
         // Add best ever genome without mutation
         SetUpTopGenome(ref topGenome, bestEverGenome);
         children.Add(topGenome);
-        Debug.Log(bestEverGenome.weights[0]);
 
         Genome child1 = null;
         Genome child2 = null;

@@ -60,7 +60,7 @@ public class EntityManager
     } 
 
     public void ExportCurrentAgent() {
-        testAiAgent.GetNeuralNetwork().ExportNN(@"~\..\Assets\Data\best.csv");
+        testAiAgent.GetNeuralNetwork().ExportNN(@"~\..\Assets\Data\" + currentFitness + ".csv");
     }
 
     public void ImportExistingAgent() {
@@ -126,8 +126,10 @@ public class EntityManager
             if (testAiAgent.HasAgentFailed()) {
                 if (currentFitness > bestFitness) {
                     bestFitness = currentFitness;
-                    ExportCurrentAgent();
-                    Debug.Log("EXPORTING");
+                    if (currentFitness > 20f)
+                    {
+                        ExportCurrentAgent();
+                    }
                 }
                 EventManagerOneArg.TriggerEvent(ConstantManager.UI_POPULATION, currentFitness);
 
