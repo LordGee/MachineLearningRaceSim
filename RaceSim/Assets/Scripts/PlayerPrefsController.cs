@@ -17,9 +17,17 @@ public class PlayerPrefsController : MonoBehaviour {
     public void SetHUD(bool _value) {
         PlayerPrefs.SetInt(ConstantManager.PP_SPEEDHUD, _value ? 1 : 0);
     }
+    public void SetTrack(int _value) {
+        PlayerPrefs.SetInt(ConstantManager.PP_TRACK, _value);
+    }
+    public void SetFitness(float _value) {
+        PlayerPrefs.SetFloat(ConstantManager.PP_FITNESS, _value);
+    }
 
     public bool GetLearning() { return PlayerPrefs.GetInt(ConstantManager.PP_LEARNING) == 1; }
     public bool GetLoading() { return PlayerPrefs.GetInt(ConstantManager.PP_LOADING) == 1; }
     public bool GetHUD() { return PlayerPrefs.GetInt(ConstantManager.PP_SPEEDHUD) == 1; }
+    public static int GetTrack() { return PlayerPrefs.GetInt(ConstantManager.PP_TRACK); }
+    public static float GetFitness() { return PlayerPrefs.GetFloat(ConstantManager.PP_FITNESS); }
 }
 

@@ -26,12 +26,14 @@ public class UIEvents : MonoBehaviour
         EventManagerOneArg.StartListening(ConstantManager.UI_GENERATION, GetSetGeneration);
         EventManagerOneArg.StartListening(ConstantManager.UI_POPULATION, GetSetPopulation);
         EventManagerOneArg.StartListening(ConstantManager.UI_FITNESS, GetSetCurrentFitness);
+        EventManagerOneArg.StartListening(ConstantManager.UI_BEST_FITNESS, SetBestFitness);
     }
 
     void OnDisable() {
         EventManagerOneArg.StopListening(ConstantManager.UI_GENERATION, GetSetGeneration);
         EventManagerOneArg.StopListening(ConstantManager.UI_POPULATION, GetSetPopulation);
         EventManagerOneArg.StopListening(ConstantManager.UI_FITNESS, GetSetCurrentFitness);
+        EventManagerOneArg.StopListening(ConstantManager.UI_BEST_FITNESS, SetBestFitness);
     }
 
     public void GetSetGeneration(float _gen)
@@ -56,6 +58,12 @@ public class UIEvents : MonoBehaviour
             best = _fit;
             bestFitness.GetComponent<Text>().text = best.ToString("F");
         }
+    }
+
+    public void SetBestFitness(float _fit)
+    {
+        best = _fit;
+        bestFitness.GetComponent<Text>().text = best.ToString("F");
     }
 
     public void GetSetCurrentFitness(float _fit)

@@ -110,7 +110,6 @@ public class GeneticAlgorithm
                 _out.Add(population[bestIndex]);
             }
         }
-        Debug.Log(generation + " - " + _out[0].fitness);
         if (_out[0].fitness > bestEverFitness)
         {
             bestEverFitness = _out[0].fitness;

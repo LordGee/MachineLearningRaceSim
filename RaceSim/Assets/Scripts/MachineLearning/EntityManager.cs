@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.InteropServices;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class EntityManager
 {
@@ -27,8 +29,8 @@ public class EntityManager
                 ConstantManager.MAXIMUM_GENOME_POPULATION,
                 totalWeights);
             currentFitness = 0.0f;
-            bestFitness = 0.0f;
-
+            bestFitness = PlayerPrefsController.GetFitness();
+            EventManagerOneArg.TriggerEvent(ConstantManager.UI_BEST_FITNESS, bestFitness);
             nn = new NeuralNetwork();
             Genome g = ga.GetNextGenome();
             nn.FromGenome(ref g,
@@ -60,11 +62,21 @@ public class EntityManager
     } 
 
     public void ExportCurrentAgent() {
-        testAiAgent.GetNeuralNetwork().ExportNN(@"~\..\Assets\Data\" + currentFitness + ".csv");
+        testAiAgent.GetNeuralNetwork().ExportNN(@"~\..\Assets\Data\" + PlayerPrefsController.GetTrack() + @"\" + currentFitness + ".csv");
+        AddToList();
     }
 
     public void ImportExistingAgent() {
-        testAiAgent.GetNeuralNetwork().ImportNN(@"~\..\Assets\Data\test.csv");
+        testAiAgent.GetNeuralNetwork().ImportNN(@"~\..\Assets\Data\" + PlayerPrefsController.GetTrack() + @"\" + PlayerPrefsController.GetFitness() + ".csv");
+    }
+
+    private void AddToList()
+    {
+        using (TextWriter tw = new StreamWriter(@"~\..\Assets\Data\List.csv", true))
+        {
+            tw.WriteLine(PlayerPrefsController.GetTrack());
+            tw.WriteLine(currentFitness);
+        }
     }
 
     public void NextTestSubject() {
@@ -137,7 +149,7 @@ public class EntityManager
             if (testAiAgent.HasAgentFailed()) {
                 if (currentFitness > bestFitness) {
                     bestFitness = currentFitness;
-                    if (currentFitness > 1000f)
+                    if (currentFitness > ConstantManager.COMPLETION_BONUS)
                     {
                         ExportCurrentAgent();
                     }

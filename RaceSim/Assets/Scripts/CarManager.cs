@@ -108,7 +108,7 @@ public class CarManager : MonoBehaviour {
         if (col.transform.tag == "FinishLine") {
             if (machineAI || loadBest)
             {
-                em.AddCompletionFitness(1000f);
+                em.AddCompletionFitness(ConstantManager.COMPLETION_BONUS);
                 em.AgentFailed();
             }
             gc.ResetCar();

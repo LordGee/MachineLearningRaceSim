@@ -8,6 +8,7 @@ public class ConstantManager
     public const int NUMBER_OF_HIDDEN_LAYERS = 1;
     public const float RAY_LENGTH = 100f;
     public const float BIAS = -1.0f;
+    public const float COMPLETION_BONUS = 1000f;
     public enum NNOutputs
     {
         OUTPUT_TURN_RIGHT,
@@ -33,10 +34,13 @@ public class ConstantManager
     public const string UI_GENERATION = "Generation";
     public const string UI_POPULATION = "Population";
     public const string UI_FITNESS = "Fitness";
+    public const string UI_BEST_FITNESS = "BestFitness";
 
     // Main Menu Selections
     public const string PP_LEARNING = "Learning";
     public const string PP_LOADING = "Loading";
     public const string PP_FILENAME = "FileName";
     public const string PP_SPEEDHUD = "SpeedHUD";
+    public const string PP_FITNESS = "BestFitness";
+    public const string PP_TRACK = "TrackNumber";
 }
