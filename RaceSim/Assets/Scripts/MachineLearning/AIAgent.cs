@@ -29,9 +29,7 @@ public class AIAgent
             currentOutputs[(int)ConstantManager.NNOutputs.OUTPUT_ACCELERATE] = 
                 nn.GetOutput((int)ConstantManager.NNOutputs.OUTPUT_ACCELERATE);
             currentOutputs[(int)ConstantManager.NNOutputs.OUTPUT_BRAKE] = 
-                nn.GetOutput((int)ConstantManager.NNOutputs.OUTPUT_BRAKE);
-
-            
+                nn.GetOutput((int)ConstantManager.NNOutputs.OUTPUT_BRAKE); 
         }
     }
 

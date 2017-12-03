@@ -29,15 +29,6 @@ public class InputManager : MonoBehaviour
         CastAllRays();
     }
 
-    public float GetInputByIndex(int _index) {
-        if (_index != (int)ConstantManager.NNInputs.ACCELERATION) {
-            return raycastInfo[_index].distance;
-        } else if (_index == (int)ConstantManager.NNInputs.ACCELERATION) {
-            return acceleration;
-        }
-        return 0;
-    }
-
     public void GetDirection()
     {
         float radianOrientation = (-transform.rotation.eulerAngles.y + 90f) * Mathf.PI / 180;
@@ -79,27 +70,12 @@ public class InputManager : MonoBehaviour
             new Vector3(CosX(radian, ConstantManager.RAY_LENGTH), 0, SinX(radian, ConstantManager.RAY_LENGTH));
     }
 
-    public float GetAcceleration()
-    {
-        if (GetComponent<Rigidbody>().velocity.magnitude > 0.1)
-        {
-            acceleration = GetComponent<Rigidbody>().velocity.magnitude;
-        }
-        else
-        {
-            acceleration = 0f;
-        }
-        return acceleration;
-    }
-
-    private void CastAllRays()
-    {
-        for (int i = 0; i < (int)ConstantManager.NNInputs.INPUT_COUNT - 1; i++)
-        {
+    private void CastAllRays() {
+        for (int i = 0; i < (int)ConstantManager.NNInputs.INPUT_COUNT - 1; i++) {
             RayCast(i);
         }
     }
-
+    
     public void RayCast(int _index) {
         RaycastHit hit;
 
@@ -120,8 +96,25 @@ public class InputManager : MonoBehaviour
         else
             col = Color.green;
         Debug.DrawLine(transform.position, hit.point, col);
+    }
 
-        // Debug.Log(hit.transform.name + _index);
+    public float GetInputByIndex(int _index) {
+        if (_index != (int)ConstantManager.NNInputs.ACCELERATION) {
+            return raycastInfo[_index].distance;
+        } else if (_index == (int)ConstantManager.NNInputs.ACCELERATION) {
+            GetAcceleration();
+            return acceleration;
+        }
+        return 0;
+    }
+
+    public float GetAcceleration() {
+        if (GetComponent<Rigidbody>().velocity.magnitude > 0.1) {
+            acceleration = GetComponent<Rigidbody>().velocity.magnitude;
+        } else {
+            acceleration = 0f;
+        }
+        return acceleration;
     }
 
     /* reusable math functions */
@@ -134,7 +127,6 @@ public class InputManager : MonoBehaviour
         return Mathf.Sin(_radian) * _length;
     }
 
-    // percentage of pi
     float GetRadian(float _percentage) {
         return Mathf.PI * _percentage;
     }

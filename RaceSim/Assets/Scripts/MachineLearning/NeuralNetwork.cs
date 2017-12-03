@@ -109,10 +109,14 @@ public class NeuralNetwork
                 neurons.Capacity = totalNeurons;
                 for (int j = 0; j < totalNeurons; j++) {
                     totalWeights = Convert.ToInt32(file.ReadLine());
-                    neurons[j].weights.Capacity = totalWeights;
+                    neurons.Add(null);
+                    neurons[j] = new Neuron();
+                    neurons[j].numberOfInputs = inputAmount;
+                    //neurons[j].weights.Capacity = totalWeights;
                     for (int k = 0; k < totalWeights; k++) {
                         weight = float.Parse(file.ReadLine());
-                        neurons[j].weights[k] = weight;
+                        neurons[j].weights.Add(weight);
+                        //neurons[j].weights[k] = weight;
                     }
                 }
             }
@@ -126,10 +130,14 @@ public class NeuralNetwork
             neurons.Capacity = totalNeurons;
             for (int j = 0; j < totalNeurons; j++) {
                 totalWeights = Convert.ToInt32(file.ReadLine());
-                neurons[j].weights.Capacity = totalWeights;
+                neurons.Add(null);
+                neurons[j] = new Neuron();
+                neurons[j].numberOfInputs = inputAmount;
+                // neurons[j].weights.Capacity = totalWeights;
                 for (int k = 0; k < totalWeights; k++) {
                     weight = float.Parse(file.ReadLine());
-                    neurons[j].weights[k] = weight;
+                    //neurons[j].weights[k] = weight;
+                    neurons[j].weights.Add(weight);
                 }
             }
             NNLayer oLayer = new NNLayer();
@@ -138,134 +146,6 @@ public class NeuralNetwork
 
             file.Dispose();            
         }
-
-        /*
-         		FILE* file = fopen(filename,"rt");
-
-		if(file!=NULL)
-		{
-			enum LayerType
-			{
-				HIDDEN,
-				OUTPUT,
-			};
-
-			float weight = 0.0f;
-			int totalNeurons = 0;
-			int totalWeights = 0;
-			int totalInputs = 0;
-			int currentNeuron = 0;
-			std::vector<Neuron> neurons;
-			std::vector<float> weights;
-			LayerType type = HIDDEN;
-
-
-			char buffComp[1024] ={0};
-
-			while(fgets(buffComp,1024,file))
-			{
-				char buff[1024] = {0};
-
-				if(buffComp[strlen(buffComp)-1]=='\n')
-				{
-					for(unsigned int i = 0; i<strlen(buffComp)-1;i++)
-					{
-						buff[i] = buffComp[i];
-					}
-				}
-
-				if(0 == strcmp(buff, "<NeuralNetwork>"))
-				{
-				}
-				else if (0 == strcmp(buff,"</NeuralNetwork>"))
-				{
-					break;
-				}
-				else if (0 == strcmp(buff,"<NLayer>"))
-				{
-					weight = 0.0f;
-					totalNeurons = 0;
-					totalWeights = 0;
-					totalInputs = 0;
-					currentNeuron = 0;
-					neurons.clear();
-					type = HIDDEN;
-				}
-				else if (0 == strcmp(buff,"</NLayer>"))
-				{
-					NLayer* layer = new NLayer();
-					layer->SetNeurons(neurons, neurons.size(), totalInputs);
-					switch (type)
-					{
-					case HIDDEN:
-						this->hiddenLayers.push_back(layer);
-						layer = NULL;
-						break;
-					case OUTPUT:
-						this->outputLayer = layer;
-						layer = NULL;
-						break;
-					};
-				}
-				else if (0 == strcmp(buff,"<Neuron>"))
-				{
-					weights.clear();
-				}
-				else if (0 == strcmp(buff,"</Neuron>"))
-				{
-					neurons[currentNeuron].Initilise(weights, totalInputs);
-					currentNeuron++;
-				}
-			
-				else
-				{
-					char* token = strtok(buff, "=");
-					if(token != NULL)
-					{
-						char* value = strtok(NULL,"=");
-
-
-						if (0 == strcmp(token,"Type"))
-						{
-							if (0 == strcmp("Hidden", value))
-							{
-								type = HIDDEN;
-							}
-							else if (0 == strcmp("Output", value))
-							{
-								type = OUTPUT;
-							}
-						}
-						else if (0 == strcmp(token,"NNInputs"))
-						{
-							totalInputs = atoi(value);
-						} 
-						else if (0 == strcmp(token,"Neurons"))
-						{
-							totalNeurons = atoi(value);
-						} 
-						else if (0 == strcmp(token,"Weights"))
-						{
-							totalWeights = atoi(value);
-						} 
-						else if (0 == strcmp(token,"W"))
-						{
-							weight = (float)atof(value);
-						} 
-						else if (0 == strcmp(token,"TotalOuputs"))
-						{
-							outputAmount = atoi(value);
-						} 
-						else if (0 == strcmp(token,"TotalInputs"))
-						{
-							inputAmount = atoi(value);
-						} 
-					}
-				}
-			}
-			fclose(file);
-		}
-         */
     }
 
     public void CreateNN(int _hidden, int _input, int _neuronsPerHidden, int _output)

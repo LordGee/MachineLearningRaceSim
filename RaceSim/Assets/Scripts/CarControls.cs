@@ -18,15 +18,12 @@ public class CarControls : MonoBehaviour {
     public Vector3 centerOfMassCorrection;
     public bool controllerEnabled;
 
-    private CarManager cm;
-
     void Start() {
         GetComponent<Rigidbody>().centerOfMass = centerOfMassCorrection;
-        cm = FindObjectOfType<CarManager>();
     }
 
     public void FixedUpdate() {
-        if (!cm.GetMachineAI())
+        if (!CarManager.machineAI && !CarManager.loadBest)
         {
             float motor = maximumMotorTorque * Input.GetAxis("Vertical");
             float steering = maximumSteeringAngle * Input.GetAxis("Horizontal");

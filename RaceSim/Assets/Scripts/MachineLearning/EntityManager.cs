@@ -19,24 +19,36 @@ public class EntityManager
 
     public EntityManager()
     {
-        ga = new GeneticAlgorithm();
-        totalWeights = GetTotalWeight();
-        ga.GenerateNewPopulation(
-            ConstantManager.MAXIMUM_GENOME_POPULATION,
-            totalWeights);
-        currentFitness = 0.0f;
-        bestFitness = 0.0f;
+        if (CarManager.machineAI)
+        {
+            ga = new GeneticAlgorithm();
+            totalWeights = GetTotalWeight();
+            ga.GenerateNewPopulation(
+                ConstantManager.MAXIMUM_GENOME_POPULATION,
+                totalWeights);
+            currentFitness = 0.0f;
+            bestFitness = 0.0f;
 
-        nn = new NeuralNetwork();
-        Genome g = ga.GetNextGenome();
-        nn.FromGenome(ref g, 
-            (int)ConstantManager.NNInputs.INPUT_COUNT,
-            ConstantManager.HIDDEN_LAYER_NEURONS,
-            (int)ConstantManager.NNOutputs.OUTPUT_COUNT);
-        
-        testAiAgent = new AIAgent();
-        resetPosition = true;
-        testAiAgent.AttachNeuralNetwork(nn);
+            nn = new NeuralNetwork();
+            Genome g = ga.GetNextGenome();
+            nn.FromGenome(ref g,
+                (int)ConstantManager.NNInputs.INPUT_COUNT,
+                ConstantManager.HIDDEN_LAYER_NEURONS,
+                (int)ConstantManager.NNOutputs.OUTPUT_COUNT);
+
+            testAiAgent = new AIAgent();
+            resetPosition = true;
+            testAiAgent.AttachNeuralNetwork(nn);
+        }
+        if (CarManager.loadBest)
+        {
+            nn = new NeuralNetwork();
+            testAiAgent = new AIAgent();
+            testAiAgent.AttachNeuralNetwork(nn);
+            
+            ImportExistingAgent();
+            resetPosition = true;
+        }
     }
 
     private int GetTotalWeight() {
@@ -48,12 +60,11 @@ public class EntityManager
     } 
 
     public void ExportCurrentAgent() {
-        // testAiAgent.GetNeuralNetwork().ExportNN(@"C:\GameProjects\MachineLearningRaceSim\RaceSim\Assets\Data\best.csv");
         testAiAgent.GetNeuralNetwork().ExportNN(@"~\..\Assets\Data\best.csv");
     }
 
     public void ImportExistingAgent() {
-        testAiAgent.GetNeuralNetwork().ImportNN(@"~\..\Assets\Data\best.csv");
+        testAiAgent.GetNeuralNetwork().ImportNN(@"~\..\Assets\Data\test.csv");
     }
 
     public void NextTestSubject() {
@@ -97,35 +108,38 @@ public class EntityManager
         testAiAgent.SetInputs(inputs);
         testAiAgent.ManualUpdate();
         outputs = testAiAgent.GetOutputs();
-        if (counter > 60) 
+        if (counter > 60) // agent not moved for 60x frames
         {
             AgentFailed();
             counter = 0; 
         }
+        if (CarManager.loadBest)
+        {
+            if (testAiAgent.HasAgentFailed()) 
+                { resetPosition = true; }
+        }
+        if (CarManager.machineAI)
+        {
+            if (newFitness == 0) { counter++; } else { counter = 0; }
+            currentFitness += (newFitness / 2.0f);
+            EventManagerOneArg.TriggerEvent(ConstantManager.UI_FITNESS, currentFitness);
+            if (testAiAgent.HasAgentFailed()) {
+                if (currentFitness > bestFitness) {
+                    bestFitness = currentFitness;
+                    ExportCurrentAgent();
+                    Debug.Log("EXPORTING");
+                }
+                EventManagerOneArg.TriggerEvent(ConstantManager.UI_POPULATION, currentFitness);
 
-        if (newFitness == 0) { counter++; }
-        else { counter = 0; }
-        currentFitness += (newFitness / 2.0f);
-        EventManagerOneArg.TriggerEvent(ConstantManager.UI_FITNESS, currentFitness);
-        if (testAiAgent.HasAgentFailed()) {
-            if (currentFitness > bestFitness) {
-                bestFitness = currentFitness;
-                ExportCurrentAgent();
-                Debug.Log("EXPORTING");
+                ForceToNextAgent();
             }
-            EventManagerOneArg.TriggerEvent(ConstantManager.UI_POPULATION, currentFitness);
-            
-            ForceToNextAgent();
         }
     }
 
     public void PrepareInputs(List<float> _currentInputs) { inputs = _currentInputs; }
     public float[] GetCurrentOutputs() { return outputs; }
 
-    public void SetNewFitness(float _fit)
-    {
-        newFitness = _fit;
-    }
+    public void SetNewFitness(float _fit) { newFitness = _fit; }
     public void AddCompletionFitness(float _value) { currentFitness += _value; }
     public void AgentFailed() { testAiAgent.SetFailed(); }
     public bool GetResetPosition() { return resetPosition; }

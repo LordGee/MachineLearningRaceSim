@@ -4,18 +4,22 @@ using UnityEngine;
 
 public class CarManager : MonoBehaviour {
 
-    private GameController gameControl;
+    private GameController gc;
     private CarControls cc;
     private InputManager im;
     private EntityManager em;
 
-    [SerializeField] public bool machineAI;
+    public bool learn, load;
+    public static bool machineAI, loadBest;
 
-    void Awake() {
-        gameControl = FindObjectOfType<GameController>();
+    void Awake()
+    {
+        machineAI = learn;
+        loadBest = load;
+        gc = FindObjectOfType<GameController>();
         cc = FindObjectOfType<CarControls>();
         im = GetComponent<InputManager>();
-        if (machineAI)
+        if (machineAI || loadBest)
         {
             em = new EntityManager();
         }
@@ -47,12 +51,37 @@ public class CarManager : MonoBehaviour {
             cc.PerformMovement(
                 newOutputs[(int)ConstantManager.NNOutputs.OUTPUT_TURN_RIGHT] - newOutputs[(int)ConstantManager.NNOutputs.OUTPUT_TURN_LEFT], 
                 newOutputs[(int)ConstantManager.NNOutputs.OUTPUT_ACCELERATE], 
-                (newOutputs[(int)ConstantManager.NNOutputs.OUTPUT_BRAKE] > 0.5), 
+                (newOutputs[(int)ConstantManager.NNOutputs.OUTPUT_BRAKE] > 0.8), 
                 true);
             em.SetNewFitness(im.GetAcceleration() * Time.deltaTime);
             if (em.GetResetPosition())
             {
-                gameControl.ResetCar(); 
+                gc.ResetCar(); 
+                em.CompleteResetPosition();
+            }
+        }
+        if (loadBest)
+        {
+            // Obtain current inputs
+            im.UpdateInputs();
+            List<float> currentInputs = new List<float>();
+            for (int i = 0; i < (int)ConstantManager.NNInputs.INPUT_COUNT; i++) {
+                // get raycast events and add distance to the input list
+                currentInputs.Add(im.GetInputByIndex(i));
+            }
+
+            // Set up entity
+            em.PrepareInputs(currentInputs); // Adds inputs to entity variable
+            em.ManualUpdate();
+            float[] newOutputs = em.GetCurrentOutputs();
+            cc.PerformMovement(
+                newOutputs[(int)ConstantManager.NNOutputs.OUTPUT_TURN_RIGHT] - newOutputs[(int)ConstantManager.NNOutputs.OUTPUT_TURN_LEFT],
+                newOutputs[(int)ConstantManager.NNOutputs.OUTPUT_ACCELERATE],
+                (newOutputs[(int)ConstantManager.NNOutputs.OUTPUT_BRAKE] > 0.8),
+                true);
+            // em.SetNewFitness(im.GetAcceleration() * Time.deltaTime);
+            if (em.GetResetPosition()) {
+                gc.ResetCar();
                 em.CompleteResetPosition();
             }
         }
@@ -61,7 +90,7 @@ public class CarManager : MonoBehaviour {
     void OnCollisionEnter(Collision col) {
         if (col.transform.tag == "Barrier") {
             em.AgentFailed();
-            gameControl.ResetCar();
+            gc.ResetCar();
         }
     }
 
@@ -75,8 +104,8 @@ public class CarManager : MonoBehaviour {
         if (col.transform.tag == "FinishLine") {
             em.AddCompletionFitness(1000f);
             em.AgentFailed();
-            gameControl.ResetCar();
-            // gameControl.FinishGame(gameObject);
+            gc.ResetCar();
+            // gc.FinishGame(gameObject);
         }
     }
 

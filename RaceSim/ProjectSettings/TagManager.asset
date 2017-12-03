@@ -9,6 +9,7 @@ TagManager:
   - Spawn
   - FinishLine
   - Sensor
+  - SpawnHuman
   layers:
   - Default
   - TransparentFX

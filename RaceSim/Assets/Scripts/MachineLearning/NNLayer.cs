@@ -41,25 +41,6 @@ public class NNLayer
                 _file.WriteLine(neurons[i].weights[j]);
             }
         }
-        /*
-         fileOut << "<NLayer>" << std::endl;
-		fileOut << "Type=" << layerType << std::endl;
-		fileOut << "NNInputs=" << this->totalInputs << std::endl;
-		fileOut << "Neurons=" << this->neurons.size() << std::endl;
-		fileOut << "-Build-" << std::endl;
-		for (unsigned int i = 0; i < this->neurons.size(); i++)
-		{
-			fileOut << "<Neuron>" << std::endl;
-			fileOut << "Weights=" << this->neurons[i].weights.size() << std::endl;
-			for (unsigned int j = 0; j < neurons[i].weights.size(); j++)
-			{
-				fileOut << "W=" << neurons[i].weights[j] << std::endl; 
-			}
-			fileOut << "</Neuron>" << std::endl;
-		}
-			
-		fileOut << "</NLayer>" << std::endl;
-         */
     }
 
     public void LoadLayer(List<Neuron> _neuron)
