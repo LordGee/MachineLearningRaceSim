@@ -80,6 +80,15 @@ public class EntityManager
         testAiAgent.AttachNeuralNetwork(nn);
     }
 
+    private void ReloadExistingAgent()
+    {
+        nn = new NeuralNetwork();
+        testAiAgent = new AIAgent();
+        resetPosition = true;
+        testAiAgent.AttachNeuralNetwork(nn);
+        ImportExistingAgent();
+    }
+
     public void BreedPopulation() {
         ga.ClearPopulation();
         totalWeights = GetTotalWeight();
@@ -115,8 +124,10 @@ public class EntityManager
         }
         if (CarManager.loadBest)
         {
-            if (testAiAgent.HasAgentFailed()) 
-                { resetPosition = true; }
+            if (testAiAgent.HasAgentFailed())
+            {
+                ReloadExistingAgent();
+            }
         }
         if (CarManager.machineAI)
         {
@@ -126,7 +137,7 @@ public class EntityManager
             if (testAiAgent.HasAgentFailed()) {
                 if (currentFitness > bestFitness) {
                     bestFitness = currentFitness;
-                    if (currentFitness > 20f)
+                    if (currentFitness > 1000f)
                     {
                         ExportCurrentAgent();
                     }

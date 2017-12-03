@@ -12,12 +12,15 @@ public class GameController : MonoBehaviour {
     private Quaternion quaternion = Quaternion.AngleAxis(90f, Vector3.up);
     private Transform resetPosition;
     private CarManager cm;
+    private PlayerPrefsController pp;
 
     private void Start() {
         spawnPoint = GameObject.FindGameObjectWithTag("Spawn").transform.position;
         gameAttempts = 1;
         ResetGame();
         cm = FindObjectOfType<CarManager>();
+        pp = FindObjectOfType<PlayerPrefsController>();
+        SetCorrectHUD();
     }
 
     private void Update()
@@ -49,5 +52,19 @@ public class GameController : MonoBehaviour {
         print("Finish Time = " + gameTimer);
         print("It took you " + gameAttempts + " attempts");
         ResetGame(_car);
+    }
+
+    private void SetCorrectHUD()
+    {
+        GameObject speed = GameObject.Find("SpeedHUDCanvas");
+        GameObject genetic = GameObject.Find("GeneticHUDCanvas");
+        if (pp.GetHUD())
+        {
+            genetic.SetActive(false);
+        }
+        else
+        {
+            speed.SetActive(false);
+        }
     }
 }

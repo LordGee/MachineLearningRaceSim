@@ -8,14 +8,16 @@ public class CarManager : MonoBehaviour {
     private CarControls cc;
     private InputManager im;
     private EntityManager em;
+    private PlayerPrefsController pp;
 
-    public bool learn, load;
     public static bool machineAI, loadBest;
+    public static float timeSpeed = 1f;
 
-    void Awake()
+    void Start()
     {
-        machineAI = learn;
-        loadBest = load;
+        pp = FindObjectOfType<PlayerPrefsController>();
+        machineAI = pp.GetLearning();
+        loadBest = pp.GetLoading();
         gc = FindObjectOfType<GameController>();
         cc = FindObjectOfType<CarControls>();
         im = GetComponent<InputManager>();
@@ -24,8 +26,7 @@ public class CarManager : MonoBehaviour {
             em = new EntityManager();
         }
     }
-
-    public static float timeSpeed = 1f;
+    
     void Update()
     {
         Time.timeScale = timeSpeed;
@@ -89,7 +90,10 @@ public class CarManager : MonoBehaviour {
 
     void OnCollisionEnter(Collision col) {
         if (col.transform.tag == "Barrier") {
-            em.AgentFailed();
+            if (machineAI || loadBest)
+            {
+                em.AgentFailed();
+            }
             gc.ResetCar();
         }
     }
@@ -102,8 +106,11 @@ public class CarManager : MonoBehaviour {
     void OnTriggerEnter(Collider col)
     {
         if (col.transform.tag == "FinishLine") {
-            em.AddCompletionFitness(1000f);
-            em.AgentFailed();
+            if (machineAI || loadBest)
+            {
+                em.AddCompletionFitness(1000f);
+                em.AgentFailed();
+            }
             gc.ResetCar();
             // gc.FinishGame(gameObject);
         }
