@@ -2,6 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// The following code was hand typed using one of cat like codding tutorials for creating BezierSplines
+/// The purpose of this was to create Track Pieces that could be utilised within the game.
+/// Reference : http://catlikecoding.com/unity/tutorials/curves-and-splines/
+/// </summary>
 public static class Bezier {
 
     public static Vector3 GetPoint(Vector3 _p0, Vector3 _p1, Vector3 _p2, float _t)

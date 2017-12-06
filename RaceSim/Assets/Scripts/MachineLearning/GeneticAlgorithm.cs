@@ -3,40 +3,11 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
 
-public class GeneticAlgorithm
-{
+public class GeneticAlgorithm {
 
-    private int currentGenome, genomeID, generation;
-    private int totalPopulation;
-    private List<Genome> population;
-    private float bestEverFitness;
-    private Genome bestEverGenome;
-
-    public GeneticAlgorithm()
-    {
-        currentGenome = 0;
-        totalPopulation = 0;
-        genomeID = 0;
-        generation = 1;
-        population = new List<Genome>();
-        bestEverFitness = 0f;
-    }
-
-    ~GeneticAlgorithm()
-    {
-        ClearPopulation();
-    }
-
-    public Genome GetNextGenome()
-    {
-        currentGenome++;
-        if (currentGenome >= population.Count || currentGenome < 0) {
-            return null;
-        }
-        return population[currentGenome];
-    }
-
-    public Genome GetBestGenome()
+    // TODO : Come back and delete the following
+    /*
+     public Genome GetBestGenome()
     {
         int bestGenome = -1;
         float fitness = 0;
@@ -48,7 +19,6 @@ public class GeneticAlgorithm
         }
         return population[bestGenome];
     }
-
     public Genome GetWorstGenome()
     {
         int worstGenome = -1;
@@ -61,7 +31,6 @@ public class GeneticAlgorithm
         }
         return population[worstGenome];
     }
-
     public Genome GetGenome(int _index)
     {
         if (_index >= totalPopulation) {
@@ -69,18 +38,64 @@ public class GeneticAlgorithm
         }
         return population[_index];
     }
-
-    public int GetCurrentGenomeIndex() { return currentGenome; }
-
     public int GetCurrentGenomeID() { return population[currentGenome].ID; }
 
     public int GetCurrentGeneration() { return generation; }
 
     public int GetTotalPopulation() { return totalPopulation; }
+    */
 
+    private int currentGenome, genomeID, generation, totalPopulation;
+    private List<Genome> population;
+    private float bestEverFitness;
+    private Genome bestEverGenome;
 
-    private void GetBestCases(int _totalGenomes, ref List<Genome> _out)
-    {
+    /// <summary>
+    /// Constructor, sets initial starting values
+    /// </summary>
+    public GeneticAlgorithm() {
+        currentGenome = 0;
+        totalPopulation = 0;
+        genomeID = 0;
+        generation = 1;
+        population = new List<Genome>();
+        bestEverFitness = 0f;
+    }
+
+    /// <summary>
+    /// Deconstructor, Removes all population
+    /// </summary>
+    ~GeneticAlgorithm() {
+        ClearPopulation();
+    }
+
+    /// <summary>
+    /// Provides the next available Gennome, when required to the Entity Manager
+    /// </summary>
+    /// <returns>Returns the next Genome</returns>
+    public Genome GetNextGenome() {
+        currentGenome++;
+        if (currentGenome >= population.Count || currentGenome < 0) {
+            return null;
+        }
+        return population[currentGenome];
+    }
+    
+    /// <summary>
+    /// Returns the current genome index value
+    /// </summary>
+    /// <returns>Current Genome Index value</returns>
+    public int GetCurrentGenomeIndex() { return currentGenome; }
+
+    /// <summary>
+    /// This function updates the List of Genome with a nominated number of the 
+    /// top performing (highest fitness) genomes from the last generation / population.
+    /// Currently the number of genomes obtained is set to 4, this could be later 
+    /// updated to a percentage of the total max population to ensure consistancy.
+    /// </summary>
+    /// <param name="_totalGenomes">How many genomes do you want returned in the list</param>
+    /// <param name="_out">List to be updated with the best genomes for cross breeding</param>
+    private void GetBestCases(int _totalGenomes, ref List<Genome> _out) {
         int genomeCount = 0;
         int runCount = 0;
         while (genomeCount < _totalGenomes) {
@@ -88,7 +103,6 @@ public class GeneticAlgorithm
                 return;
             }
             runCount++;
-            // Find the best cases for cross breeding based on fitness score.
             float bestFitness = 0;
             int bestIndex = -1;
             for (int i = 0; i < population.Count; i++) {
@@ -117,6 +131,7 @@ public class GeneticAlgorithm
             bestEverGenome = _out[0];
         }
     }
+
 
     private void CrossBreed(Genome _g1, Genome _g2, ref Genome _baby1, ref Genome _baby2)
     {
