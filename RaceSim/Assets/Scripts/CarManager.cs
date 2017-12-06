@@ -19,11 +19,15 @@ public class CarManager : MonoBehaviour {
         machineAI = pp.GetLearning();
         loadBest = pp.GetLoading();
         gc = FindObjectOfType<GameController>();
-        cc = FindObjectOfType<CarControls>();
+        cc = GetComponent<CarControls>();
         im = GetComponent<InputManager>();
         if (machineAI || loadBest)
         {
             em = new EntityManager();
+        }
+        if (loadBest)
+        {
+            transform.Find("Main Camera").gameObject.SetActive(false);
         }
     }
     
@@ -57,7 +61,7 @@ public class CarManager : MonoBehaviour {
             em.SetNewFitness(im.GetAcceleration() * Time.deltaTime);
             if (em.GetResetPosition())
             {
-                gc.ResetCar(); 
+                gc.ResetCar(true); 
                 em.CompleteResetPosition();
             }
         }
@@ -82,7 +86,7 @@ public class CarManager : MonoBehaviour {
                 true);
             // em.SetNewFitness(im.GetAcceleration() * Time.deltaTime);
             if (em.GetResetPosition()) {
-                gc.ResetCar();
+                gc.ResetCar(true);
                 em.CompleteResetPosition();
             }
         }
@@ -94,7 +98,7 @@ public class CarManager : MonoBehaviour {
             {
                 em.AgentFailed();
             }
-            gc.ResetCar();
+            gc.ResetCar(true);
         }
     }
 
@@ -111,7 +115,7 @@ public class CarManager : MonoBehaviour {
                 em.AddCompletionFitness(ConstantManager.COMPLETION_BONUS);
                 em.AgentFailed();
             }
-            gc.ResetCar();
+            gc.ResetCar(true);
             // gc.FinishGame(gameObject);
         }
     }

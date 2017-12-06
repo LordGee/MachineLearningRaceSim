@@ -36,6 +36,10 @@ public class ConstantManager
     public const string UI_FITNESS = "Fitness";
     public const string UI_BEST_FITNESS = "BestFitness";
 
+    public const string UI_HUMAN = "HumanBestTime";
+    public const string UI_MACHINE = "MachineBestTime";
+    public const string UI_TIMER = "GameTimer";
+
     // Main Menu Selections
     public const string PP_LEARNING = "Learning";
     public const string PP_LOADING = "Loading";
@@ -43,4 +47,9 @@ public class ConstantManager
     public const string PP_SPEEDHUD = "SpeedHUD";
     public const string PP_FITNESS = "BestFitness";
     public const string PP_TRACK = "TrackNumber";
+
+    // Game Times
+    public const string GG_TrackOne = "Track1";
+    public const string GG_TrackTwo = "Track2";
+    public const string GG_TrackThree = "Track3";
 }

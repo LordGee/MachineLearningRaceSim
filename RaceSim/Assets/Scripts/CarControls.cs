@@ -22,30 +22,6 @@ public class CarControls : MonoBehaviour {
         GetComponent<Rigidbody>().centerOfMass = centerOfMassCorrection;
     }
 
-    public void FixedUpdate() {
-        if (!CarManager.machineAI && !CarManager.loadBest)
-        {
-            float motor = maximumMotorTorque * Input.GetAxis("Vertical");
-            float steering = maximumSteeringAngle * Input.GetAxis("Horizontal");
-            bool braking;
-            if (Input.GetButton("Jump"))
-            {
-                braking = true;
-            }
-            else
-            {
-                braking = false;
-            }
-            // Debug.Log("Performed Movement");
-            PerformMovement(steering, motor,braking, false);
-        }
-        else
-        {
-            // AI Controlled
-        }
-        
-    }
-
     public void PerformMovement(float _steering, float _motor, bool _braking, bool _ai)
     {
         // print("Steering: " + _steering + " - Motor: " + _motor + " - Brake: " + _braking);

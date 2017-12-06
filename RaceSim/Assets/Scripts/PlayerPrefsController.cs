@@ -23,6 +23,21 @@ public class PlayerPrefsController : MonoBehaviour {
     public void SetFitness(float _value) {
         PlayerPrefs.SetFloat(ConstantManager.PP_FITNESS, _value);
     }
+    public void SetBestTime(float _value, int _track) {
+        switch (_track)
+        {
+            case (1) :
+                PlayerPrefs.SetFloat(ConstantManager.GG_TrackOne, _value);
+                break;
+            case (2):
+                PlayerPrefs.SetFloat(ConstantManager.GG_TrackTwo, _value);
+                break;
+            case (3):
+                PlayerPrefs.SetFloat(ConstantManager.GG_TrackThree, _value);
+                break;
+        }
+        
+    }
 
     public bool GetLearning() { return PlayerPrefs.GetInt(ConstantManager.PP_LEARNING) == 1; }
     public bool GetLoading() { return PlayerPrefs.GetInt(ConstantManager.PP_LOADING) == 1; }

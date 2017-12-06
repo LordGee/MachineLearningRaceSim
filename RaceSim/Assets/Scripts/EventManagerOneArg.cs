@@ -6,6 +6,10 @@ using UnityEngine.Events;
 [System.Serializable]
 public class ThisEvent : UnityEvent<float> {
 }
+/// <summary>
+/// Reference: Unity3D - Events: Creating a simple messaging system
+/// URL: https://unity3d.com/learn/tutorials/topics/scripting/events-creating-simple-messaging-system
+/// </summary>
 public class EventManagerOneArg : MonoBehaviour {
 
     private Dictionary<string, ThisEvent> eventDictionary;
