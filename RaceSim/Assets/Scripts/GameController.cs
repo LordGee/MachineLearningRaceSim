@@ -11,7 +11,6 @@ public class GameController : MonoBehaviour {
     private int gameAttempts;
     private Vector3 spawnPoint, humanSpawnPoint;
     private Quaternion quaternion = Quaternion.AngleAxis(90f, Vector3.up);
-    private Transform resetPosition;
     private CarManager cm;
     private HumanCarManager hcm;
     private PlayerPrefsController pp;

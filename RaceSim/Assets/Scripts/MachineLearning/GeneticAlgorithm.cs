@@ -124,109 +124,104 @@ public class GeneticAlgorithm {
                 _out.Add(population[bestIndex]);
             }
         }
-        if (_out[0].fitness > bestEverFitness)
-        {
+        if (_out[0].fitness > bestEverFitness) {
             bestEverFitness = _out[0].fitness;
             bestEverGenome = new Genome();
             bestEverGenome = _out[0];
         }
     }
 
-
-    private void CrossBreed(Genome _g1, Genome _g2, ref Genome _baby1, ref Genome _baby2)
-    {
+    /// <summary>
+    /// This function takes in two existing Genomes and and takes the weights and 
+    /// splits them at a random section and populates the remaining weights with 
+    /// the second genome to ensure the Capacity remains unchanged, this produces 
+    /// two babys which have a mixer of the two original genome.
+    /// </summary>
+    /// <param name="_g1">Original genome one</param>
+    /// <param name="_g2">Original genome two</param>
+    /// <param name="_baby1">Returned baby one</param>
+    /// <param name="_baby2">Returned baby two</param>
+    private void CrossBreed(Genome _g1, Genome _g2, ref Genome _baby1, ref Genome _baby2) {
         int totalWeights = _g1.weights.Capacity;
         int crossOver = Random.Range(0, totalWeights);
-
         _baby1 = new Genome();
         _baby1.ID = genomeID;
         _baby1.weights.Capacity = totalWeights;
         genomeID++;
-
         _baby2 = new Genome();
         _baby2.ID = genomeID;
         _baby2.weights.Capacity = totalWeights;
         genomeID++;
-
-        for (int i = 0; i < crossOver; i++)
-        {
+        for (int i = 0; i < crossOver; i++) {
             _baby1.weights.Add(_g1.weights[i]);
             _baby2.weights.Add(_g2.weights[i]);
         }
-
-        for (int i = crossOver; i < totalWeights; i++)
-        {
+        for (int i = crossOver; i < totalWeights; i++) {
             _baby1.weights.Add(_g2.weights[i]);
             _baby2.weights.Add(_g1.weights[i]);
         }
     }
 
+    /// <summary>
+    /// Generates a new genome and populates starting weight float values 
+    /// between -1.0 and +1.0. Typically only used at the start
+    /// </summary>
+    /// <param name="_totalWeights">Total weights required for this configuration</param>
+    /// <returns></returns>
     private Genome CreateNewGenome(int _totalWeights) {
         Genome genome = new Genome();
         genome.ID = genomeID;
         genome.fitness = 0.0f;
         genome.weights.Capacity = _totalWeights;
-        for (int i = 0; i < _totalWeights; i++)
-        {
+        for (int i = 0; i < _totalWeights; i++) {
             genome.weights.Add(Random.Range(-1.0f, 1.0f));
         }
         genomeID++;
         return genome;
     }
 
-    public void GenerateNewPopulation(int _newTotalPopulation, int _totalWeights)
-    {
+    /// <summary>
+    /// Populates a brand new population of genomes up to the 
+    /// maximum population total.
+    /// </summary>
+    /// <param name="_newTotalPopulation">Maximum population for all generations</param>
+    /// <param name="_totalWeights">Total weights required for this confiuration</param>
+    public void GenerateNewPopulation(int _newTotalPopulation, int _totalWeights) {
         generation = 1;
         ClearPopulation();
         currentGenome = 0;
         totalPopulation = _newTotalPopulation;
         population.Capacity = _newTotalPopulation;
         for (int i = 0; i < population.Capacity; i++) {
-            Genome genome = new Genome();
-            genome.ID = genomeID;
-            genome.fitness = 0.0f;
-            genome.weights.Capacity = _totalWeights;
-            for (int j = 0; j < _totalWeights; j++) {
-                genome.weights.Add(Random.Range(-1.0f, 1.0f));
-            }
-            genomeID++;
+            Genome genome = CreateNewGenome(_totalWeights);
             population.Add(genome);
         }
         EventManagerOneArg.TriggerEvent(ConstantManager.UI_GENERATION, generation);
     }
 
-    public Genome SetUpTopGenome(ref Genome _g, Genome _add)
-    {
-        _g = new Genome();
-        _g.fitness = 0.0f;
-        _g.ID = genomeID;
-        genomeID++;
-        _g.weights = _add.weights;
-        return _g;
-    }
-
+    /// <summary>
+    /// This function is called when the previous generation has completed
+    /// all tests. The four best genomes from the previous generation are identified
+    /// The four best are then added to the next generation after the mutation process
+    /// has ben complete. It then adds the overall best performing genome which does 
+    /// not recieve mutation. After this a cross breeding process takes place, each 
+    /// child that is returned is then also mutated. Lastly if there are any remaining
+    /// spaces to reach maximum population then brand new random genomes are generated
+    /// and added to the next population.
+    /// </summary>
     public void BreedPopulation()
     {
         List<Genome> bestGenomes = new List<Genome>();
-        // Find the four best genomes
         GetBestCases(4, ref bestGenomes);
-
         List<Genome> children = new List<Genome>();
-
         Genome topGenome = new Genome();
-
-        // Add best four after mutation
-        for (int i = 0; i < bestGenomes.Count; i++)
-        {
+        for (int i = 0; i < bestGenomes.Count; i++) {
             SetUpTopGenome(ref topGenome, bestGenomes[i]);
             Mutate(topGenome);
             children.Add(topGenome);
         }
-
-        // Add best ever genome without mutation
         SetUpTopGenome(ref topGenome, bestEverGenome);
         children.Add(topGenome);
-
         Genome child1 = null;
         Genome child2 = null;
         int crossBreedIteration = Mathf.Abs((ConstantManager.MAXIMUM_GENOME_POPULATION - children.Count) / (bestGenomes.Count + 2));
@@ -239,37 +234,54 @@ public class GeneticAlgorithm {
                 children.Add(child2);
             }
         }
-
         int remainingChildren = totalPopulation - children.Count;
-        for (int i = 0; i < remainingChildren; i++)
-        {
+        for (int i = 0; i < remainingChildren; i++) {
             children.Add(CreateNewGenome(bestGenomes[0].weights.Count));
         }
-
         ClearPopulation();
         population = children;
-
         currentGenome = 0;
         generation++;
         EventManagerOneArg.TriggerEvent(ConstantManager.UI_GENERATION, generation);
     }
 
-    public void ClearPopulation()
-    {
-        if (population.Count > 0)
-        {
+    /// <summary>
+    /// Configures the new child to be added into the children list in the previous function.
+    /// </summary>
+    /// <param name="_g">New genome</param>
+    /// <param name="_add">Existing genome</param>
+    /// <returns>Returns a configured genome</returns>
+    public Genome SetUpTopGenome(ref Genome _g, Genome _add) {
+        _g = new Genome();
+        _g.fitness = 0.0f;
+        _g.ID = genomeID;
+        genomeID++;
+        _g.weights = _add.weights;
+        return _g;
+    }
+
+    /// <summary>
+    /// Clears all information from the current population, in
+    /// preparation for the next.
+    /// </summary>
+    public void ClearPopulation() {
+        if (population.Count > 0) {
             for (int i = 0; i < population.Count; i++) {
                 if (population[i] != null) {
                     population[i] = null;
                 }
             }
         }
-        // population.Clear();
         population = new List<Genome>();
     }
 
-    private void Mutate(Genome _genome)
-    {
+    /// <summary>
+    /// The class provides an 8% mutation rate for a genome that is 
+    /// passed into it. Depending on the random hit, provides different
+    /// effects on the current weight value.
+    /// </summary>
+    /// <param name="_genome">Genome that requires to be mutated</param>
+    private void Mutate(Genome _genome) {
         for (int i = 0; i < _genome.weights.Count; i++) {
             float mutationLottery = Random.Range(0f, 100f);
             if (mutationLottery <= 2f) {
@@ -284,10 +296,13 @@ public class GeneticAlgorithm {
         }
     }
 
-    public void SetGenomeFitness(float _fitness, int _index)
-    {
-        if (_index >= population.Count || _index < 0)
-        {
+    /// <summary>
+    /// Sets the fitness of a genome after its test
+    /// </summary>
+    /// <param name="_fitness">New fitness</param>
+    /// <param name="_index">Genome index value</param>
+    public void SetGenomeFitness(float _fitness, int _index) {
+        if (_index >= population.Count || _index < 0) {
             return;
         }
         population[_index].fitness = _fitness;

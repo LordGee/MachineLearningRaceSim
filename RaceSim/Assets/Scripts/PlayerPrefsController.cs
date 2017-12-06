@@ -35,8 +35,7 @@ public class PlayerPrefsController : MonoBehaviour {
             case (3):
                 PlayerPrefs.SetFloat(ConstantManager.GG_TrackThree, _value);
                 break;
-        }
-        
+        } 
     }
 
     public bool GetLearning() { return PlayerPrefs.GetInt(ConstantManager.PP_LEARNING) == 1; }
@@ -44,5 +43,17 @@ public class PlayerPrefsController : MonoBehaviour {
     public bool GetHUD() { return PlayerPrefs.GetInt(ConstantManager.PP_SPEEDHUD) == 1; }
     public static int GetTrack() { return PlayerPrefs.GetInt(ConstantManager.PP_TRACK); }
     public static float GetFitness() { return PlayerPrefs.GetFloat(ConstantManager.PP_FITNESS); }
+    public float GetBestTime(int _track) {
+        switch (_track) {
+            case (1):
+                return PlayerPrefs.GetFloat(ConstantManager.GG_TrackOne);
+            case (2):
+                return PlayerPrefs.GetFloat(ConstantManager.GG_TrackTwo);
+            case (3):
+                return PlayerPrefs.GetFloat(ConstantManager.GG_TrackThree);
+            default:
+                return 0f;
+        }
+    }
 }
 

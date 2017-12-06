@@ -16,7 +16,6 @@ public class CarControls : MonoBehaviour {
     public float maximumSteeringAngle;
     public float brakeForce;
     public Vector3 centerOfMassCorrection;
-    public bool controllerEnabled;
 
     void Start() {
         GetComponent<Rigidbody>().centerOfMass = centerOfMassCorrection;
@@ -24,14 +23,11 @@ public class CarControls : MonoBehaviour {
 
     public void PerformMovement(float _steering, float _motor, bool _braking, bool _ai)
     {
-        // print("Steering: " + _steering + " - Motor: " + _motor + " - Brake: " + _braking);
         if (_ai)
         {
             _steering = maximumSteeringAngle * _steering;
             _motor = maximumMotorTorque * _motor;
         }
-        
-
         foreach (WheelSet wheels in wheelSets) {
             if (wheels.steering) {
                 wheels.leftWheel.steerAngle = _steering;

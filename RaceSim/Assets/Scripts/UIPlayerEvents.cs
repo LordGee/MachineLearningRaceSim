@@ -30,12 +30,12 @@ public class UIPlayerEvents : MonoBehaviour {
     }
 
     public void SetMachineTime(float _time) {
-        humanBest.GetComponent<Text>().text = _time.ToString("F");
+        machineBest.GetComponent<Text>().text = _time.ToString("F");
     }
 
     public void UpdateGameTimer(float _time) {
         int time = (int)Mathf.Floor(_time);
-        humanBest.GetComponent<Text>().text = time.ToString();
+        gameTimer.GetComponent<Text>().text = time.ToString();
     }
 
 }

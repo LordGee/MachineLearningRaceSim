@@ -15,7 +15,7 @@ public class MenuController : MonoBehaviour
     private float selectedBestFitness;
     private List<int> trackNumber;
     private List<float> trackFitness;
-    private GameObject displayFitness;
+    private GameObject displayFitness, displayTime;
 
     void Start()
     {
@@ -24,6 +24,7 @@ public class MenuController : MonoBehaviour
         trackButtons[1] = GameObject.Find("ButtonTrack2");
         trackButtons[2] = GameObject.Find("ButtonTrack3");
         displayFitness = GameObject.Find("Fitness");
+        displayTime = GameObject.Find("HumanTime");
         selectedTrack = 1;
         trackNumber = new List<int>();
         trackFitness = new List<float>();
@@ -114,7 +115,8 @@ public class MenuController : MonoBehaviour
             }
         }
         selectedBestFitness = bestFitness;
-        displayFitness.GetComponent<Text>().text = selectedBestFitness.ToString();
+        displayFitness.GetComponent<Text>().text = selectedBestFitness.ToString("F");
+        displayTime.GetComponent<Text>().text = pp.GetBestTime(selectedTrack).ToString("F");
     }
 
     private void LoadTrack()

@@ -1,21 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class HumanCarManager : MonoBehaviour
 {
 
     private GameController gc;
     private CarControls cc;
+    private PlayerPrefsController pp;
+    private float lapTime, previousTime;
 
     void Start()
     {
         gc = FindObjectOfType<GameController>();
+        pp = FindObjectOfType<PlayerPrefsController>();
         cc = GetComponent<CarControls>();
+        lapTime = previousTime = 0f;
+        EventManagerOneArg.TriggerEvent(ConstantManager.UI_HUMAN, pp.GetBestTime(SceneManager.GetActiveScene().buildIndex));
     }
 
-    void FixedUpdate()
+    void Update()
     {
+        lapTime += Time.deltaTime;
+        if (lapTime - previousTime > 1f)
+        {
+            EventManagerOneArg.TriggerEvent(ConstantManager.UI_TIMER, lapTime);
+            previousTime = lapTime;
+        }
         float motor = cc.maximumMotorTorque * Input.GetAxis("Vertical");
         float steering = cc.maximumSteeringAngle * Input.GetAxis("Horizontal");
         bool braking;
@@ -36,6 +48,7 @@ public class HumanCarManager : MonoBehaviour
 
     void OnTriggerEnter(Collider col) {
         if (col.transform.tag == "FinishLine") {
+            UpdateTimerResults();
             gc.ResetCar(false);
         }
     }
@@ -47,6 +60,17 @@ public class HumanCarManager : MonoBehaviour
         GetComponent<Rigidbody>().drag = 0f;
         transform.position = _pos;
         transform.rotation = _quat;
+        lapTime = previousTime = 0f;
+        EventManagerOneArg.TriggerEvent(ConstantManager.UI_TIMER, lapTime);
+    }
+
+    private void UpdateTimerResults()
+    {
+        if (pp.GetBestTime(SceneManager.GetActiveScene().buildIndex) < lapTime)
+        {
+            EventManagerOneArg.TriggerEvent(ConstantManager.UI_HUMAN, lapTime);
+            pp.SetBestTime(lapTime, SceneManager.GetActiveScene().buildIndex);
+        }
     }
 }
 

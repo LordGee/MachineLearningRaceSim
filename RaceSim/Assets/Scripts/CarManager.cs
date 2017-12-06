@@ -9,6 +9,7 @@ public class CarManager : MonoBehaviour {
     private InputManager im;
     private EntityManager em;
     private PlayerPrefsController pp;
+    private float lapTime;
 
     public static bool machineAI, loadBest;
     public static float timeSpeed = 1f;
@@ -28,13 +29,14 @@ public class CarManager : MonoBehaviour {
         if (loadBest)
         {
             transform.Find("Main Camera").gameObject.SetActive(false);
+            lapTime = 0f;
         }
     }
     
     void Update()
     {
         Time.timeScale = timeSpeed;
-
+        lapTime += Time.deltaTime;
         if (machineAI)
         {
             if (Input.GetKeyDown("1")) { timeSpeed = 1; }
@@ -84,8 +86,8 @@ public class CarManager : MonoBehaviour {
                 newOutputs[(int)ConstantManager.NNOutputs.OUTPUT_ACCELERATE],
                 (newOutputs[(int)ConstantManager.NNOutputs.OUTPUT_BRAKE] > 0.8),
                 true);
-            // em.SetNewFitness(im.GetAcceleration() * Time.deltaTime);
             if (em.GetResetPosition()) {
+                lapTime = 0f;
                 gc.ResetCar(true);
                 em.CompleteResetPosition();
             }
@@ -102,21 +104,19 @@ public class CarManager : MonoBehaviour {
         }
     }
 
-    private IEnumerator DelayRespawn() {
-        yield return new WaitForSeconds(0.1f);
-        // StartCoroutine(DelayRespawn());
-    }
-
     void OnTriggerEnter(Collider col)
     {
         if (col.transform.tag == "FinishLine") {
             if (machineAI || loadBest)
             {
+                if (loadBest)
+                {
+                    EventManagerOneArg.TriggerEvent(ConstantManager.UI_MACHINE, lapTime);
+                }
                 em.AddCompletionFitness(ConstantManager.COMPLETION_BONUS);
                 em.AgentFailed();
             }
             gc.ResetCar(true);
-            // gc.FinishGame(gameObject);
         }
     }
 

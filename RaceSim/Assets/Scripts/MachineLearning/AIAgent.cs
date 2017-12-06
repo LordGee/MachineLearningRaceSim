@@ -71,6 +71,14 @@ public class AIAgent {
     }
 
     /// <summary>
+    /// Returns the current required outputs to the entity manager
+    /// </summary>
+    /// <returns></returns>
+    public float[] GetOutputs() {
+        return currentOutputs;
+    }
+
+    /// <summary>
     /// Attach a constructed Neural Network to the AI Agenet
     /// </summary>
     /// <param name="_net">A constructed Neural Network</param>

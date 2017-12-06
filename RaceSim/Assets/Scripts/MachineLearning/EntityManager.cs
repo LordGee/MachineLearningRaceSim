@@ -172,6 +172,7 @@ public class EntityManager {
     public void ManualUpdate() {
         aiAgent.SetInputs(inputs);
         aiAgent.ManualUpdate();
+        outputs = aiAgent.GetOutputs();
         if (failCounter > 60) {
             AgentFailed();
             failCounter = 0; 

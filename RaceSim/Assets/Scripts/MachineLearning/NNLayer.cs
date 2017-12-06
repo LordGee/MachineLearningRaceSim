@@ -4,52 +4,11 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-public class NNLayer
-{
+public class NNLayer {
 
-    private int totalNeurons;
-    private List<Neuron> neurons;
-
-    public NNLayer() {
-        totalNeurons = -1;
-        neurons = new List<Neuron>();
-    }
-
-    public void Evaluate(List<float> _input, ref List<float> _output)
-    {
-        int inputIndex = 0;
-        for (int i = 0; i < totalNeurons; i++)
-        {
-            float activation = 0.0f;
-            for (int j = 0; j < neurons[i].numberOfInputs - 1; j++)
-            {
-                activation += _input[inputIndex] * neurons[i].weights[j];
-                inputIndex++;
-            }
-            activation += neurons[i].weights[neurons[i].numberOfInputs] * ConstantManager.BIAS;
-            _output.Add(Sigmoid(activation, 1.0f));
-            inputIndex = 0;
-        }
-    }
-
-    public void SaveLayer(ref TextWriter _file)
-    {
-        _file.WriteLine(neurons.Count);
-        for (int i = 0; i < neurons.Count; i++) {
-            _file.WriteLine(neurons[i].weights.Count);
-            for (int j = 0; j < neurons[i].weights.Count; j++) {
-                _file.WriteLine(neurons[i].weights[j]);
-            }
-        }
-    }
-
-    public void LoadLayer(List<Neuron> _neuron)
-    {
-        totalNeurons = _neuron.Count;
-        neurons = _neuron;
-    }
-
-    public void PopulateLayer(int _neurons, int _inputs)
+    // todo Come back here and delete this if not needed
+    /*
+     public void PopulateLayer(int _neurons, int _inputs)
     {
         totalNeurons = _neurons;
         neurons.Capacity = _inputs;
@@ -92,6 +51,44 @@ public class NNLayer
             }
         }
     }
+    */
+
+    private int totalNeurons;
+    private List<Neuron> neurons;
+
+    public NNLayer() {
+        totalNeurons = -1;
+        neurons = new List<Neuron>();
+    }
+
+    public void Evaluate(List<float> _input, ref List<float> _output) {
+        int inputIndex = 0;
+        for (int i = 0; i < totalNeurons; i++) {
+            float activation = 0.0f;
+            for (int j = 0; j < neurons[i].numberOfInputs - 1; j++) {
+                activation += _input[inputIndex] * neurons[i].weights[j];
+                inputIndex++;
+            }
+            activation += neurons[i].weights[neurons[i].numberOfInputs] * ConstantManager.BIAS;
+            _output.Add(Sigmoid(activation, 1.0f));
+            inputIndex = 0;
+        }
+    }
+
+    public void SaveLayer(ref TextWriter _file) {
+        _file.WriteLine(neurons.Count);
+        for (int i = 0; i < neurons.Count; i++) {
+            _file.WriteLine(neurons[i].weights.Count);
+            for (int j = 0; j < neurons[i].weights.Count; j++) {
+                _file.WriteLine(neurons[i].weights[j]);
+            }
+        }
+    }
+
+    public void LoadLayer(List<Neuron> _neuron) {
+        totalNeurons = _neuron.Count;
+        neurons = _neuron;
+    }
 
     public void SetNeurons(List<Neuron> _neurons, int _numberNeurons, int _inputs)
     {
@@ -99,8 +96,6 @@ public class NNLayer
         neurons = _neurons;
     }
 
-
-    // To be moved to a math class
     public float Sigmoid(float _a, float _p) {
         float ap = (-_a) / _p;
         return (1 / (1 + Mathf.Exp(ap)));
