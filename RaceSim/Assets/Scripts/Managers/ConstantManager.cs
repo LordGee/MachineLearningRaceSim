@@ -1,5 +1,7 @@
-﻿using UnityEngine;
-
+﻿
+/// <summary>
+/// Home for all Constant Values contained throughout this application
+/// </summary>
 public class ConstantManager
 {
     // AI Constants

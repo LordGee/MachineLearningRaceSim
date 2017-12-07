@@ -1,8 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// All UI is managed by the Event Manager to trigger the information in the display
+/// as and when required to minimise the amount of updates required.
+/// </summary>
 public class UIPlayerEvents : MonoBehaviour {
 
     private Text humanBest, machineBest, gameTimer;
@@ -14,15 +16,15 @@ public class UIPlayerEvents : MonoBehaviour {
     }
 
     void OnEnable() {
-        EventManagerOneArg.StartListening(ConstantManager.UI_HUMAN, SetHumanTime);
-        EventManagerOneArg.StartListening(ConstantManager.UI_MACHINE, SetMachineTime);
-        EventManagerOneArg.StartListening(ConstantManager.UI_TIMER, UpdateGameTimer);
+        EventManager.StartListening(ConstantManager.UI_HUMAN, SetHumanTime);
+        EventManager.StartListening(ConstantManager.UI_MACHINE, SetMachineTime);
+        EventManager.StartListening(ConstantManager.UI_TIMER, UpdateGameTimer);
     }
 
     void OnDisable() {
-        EventManagerOneArg.StopListening(ConstantManager.UI_HUMAN, SetHumanTime);
-        EventManagerOneArg.StopListening(ConstantManager.UI_MACHINE, SetMachineTime);
-        EventManagerOneArg.StopListening(ConstantManager.UI_TIMER, UpdateGameTimer);
+        EventManager.StopListening(ConstantManager.UI_HUMAN, SetHumanTime);
+        EventManager.StopListening(ConstantManager.UI_MACHINE, SetMachineTime);
+        EventManager.StopListening(ConstantManager.UI_TIMER, UpdateGameTimer);
     }
 
     public void SetHumanTime(float _time) {

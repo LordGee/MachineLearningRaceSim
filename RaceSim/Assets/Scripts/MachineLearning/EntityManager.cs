@@ -1,27 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices;
-using UnityEngine;
-using UnityEngine.SceneManagement;
 
 /// <summary>
 /// This class provides a liason between the Car Manager and the AI AGents, 
 /// Nerual Network, Genetic Algorithm and the Genome Population.
 /// </summary>
 public class EntityManager {
-
-    // TODO Come back and delete the following if no longer needed
-    /*
-     public void BreedPopulation() {
-        ga.ClearPopulation();
-        totalWeights = GetTotalWeight();
-        ga.GenerateNewPopulation(ConstantManager.MAXIMUM_GENOME_POPULATION, totalWeights);
-    }
-    public int GetCurrentEntityFromThePopulation() {
-        return ga.GetCurrentGenomeIndex();
-    }
-    */
 
     private AIAgent aiAgent;
     private NeuralNetwork nn;
@@ -58,10 +42,10 @@ public class EntityManager {
                 totalWeights);
             currentFitness = 0.0f;
             bestFitness = PlayerPrefsController.GetFitness();
-            EventManagerOneArg.TriggerEvent(ConstantManager.UI_BEST_FITNESS, bestFitness);
+            EventManager.TriggerEvent(ConstantManager.UI_BEST_FITNESS, bestFitness);
             nn = new NeuralNetwork();
             Genome g = ga.GetNextGenome();
-            nn.FromGenome(ref g,
+            nn.PopulateNeuronsFromGenome(ref g,
                 (int)ConstantManager.NNInputs.INPUT_COUNT,
                 ConstantManager.HIDDEN_LAYER_NEURONS,
                 (int)ConstantManager.NNOutputs.OUTPUT_COUNT);
@@ -125,7 +109,7 @@ public class EntityManager {
         ga.SetGenomeFitness(currentFitness, ga.GetCurrentGenomeIndex());
         currentFitness = 0.0f;
         Genome g = ga.GetNextGenome();
-        nn.FromGenome(ref g, 
+        nn.PopulateNeuronsFromGenome(ref g, 
             (int)ConstantManager.NNInputs.INPUT_COUNT, 
             ConstantManager.HIDDEN_LAYER_NEURONS, 
             (int)ConstantManager.NNOutputs.OUTPUT_COUNT);
@@ -185,7 +169,7 @@ public class EntityManager {
         if (CarManager.machineAI) {
             if (newFitness == 0) { failCounter++; } else { failCounter = 0; }
             currentFitness += (newFitness / 2.0f);
-            EventManagerOneArg.TriggerEvent(ConstantManager.UI_FITNESS, currentFitness);
+            EventManager.TriggerEvent(ConstantManager.UI_FITNESS, currentFitness);
             if (aiAgent.HasAgentFailed()) {
                 if (currentFitness > bestFitness) {
                     bestFitness = currentFitness;
@@ -193,7 +177,7 @@ public class EntityManager {
                         ExportCurrentAgent();
                     }
                 }
-                EventManagerOneArg.TriggerEvent(ConstantManager.UI_POPULATION, currentFitness);
+                EventManager.TriggerEvent(ConstantManager.UI_POPULATION, currentFitness);
                 ForceToNextAgent();
             }
         }

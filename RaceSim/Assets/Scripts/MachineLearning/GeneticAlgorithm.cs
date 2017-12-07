@@ -1,49 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class GeneticAlgorithm {
-
-    // TODO : Come back and delete the following
-    /*
-     public Genome GetBestGenome()
-    {
-        int bestGenome = -1;
-        float fitness = 0;
-        for (int i = 0; i < population.Count; i++) {
-            if (population[i].fitness > fitness) {
-                fitness = population[i].fitness;
-                bestGenome = i;
-            }
-        }
-        return population[bestGenome];
-    }
-    public Genome GetWorstGenome()
-    {
-        int worstGenome = -1;
-        float fitness = 999999999;
-        for (int i = 0; i < population.Count; i++) {
-            if (population[i].fitness < fitness) {
-                fitness = population[i].fitness;
-                worstGenome = i;
-            }
-        }
-        return population[worstGenome];
-    }
-    public Genome GetGenome(int _index)
-    {
-        if (_index >= totalPopulation) {
-            return null;
-        }
-        return population[_index];
-    }
-    public int GetCurrentGenomeID() { return population[currentGenome].ID; }
-
-    public int GetCurrentGeneration() { return generation; }
-
-    public int GetTotalPopulation() { return totalPopulation; }
-    */
 
     private int currentGenome, genomeID, generation, totalPopulation;
     private List<Genome> population;
@@ -196,7 +154,7 @@ public class GeneticAlgorithm {
             Genome genome = CreateNewGenome(_totalWeights);
             population.Add(genome);
         }
-        EventManagerOneArg.TriggerEvent(ConstantManager.UI_GENERATION, generation);
+        EventManager.TriggerEvent(ConstantManager.UI_GENERATION, generation);
     }
 
     /// <summary>
@@ -242,7 +200,7 @@ public class GeneticAlgorithm {
         population = children;
         currentGenome = 0;
         generation++;
-        EventManagerOneArg.TriggerEvent(ConstantManager.UI_GENERATION, generation);
+        EventManager.TriggerEvent(ConstantManager.UI_GENERATION, generation);
     }
 
     /// <summary>

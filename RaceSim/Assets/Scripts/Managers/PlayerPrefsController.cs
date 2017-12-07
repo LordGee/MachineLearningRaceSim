@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Manages all the player preferences through out the game by providing one 
+/// location to get a sent all information.
+/// </summary>
 public class PlayerPrefsController : MonoBehaviour {
 
     void Awake() {

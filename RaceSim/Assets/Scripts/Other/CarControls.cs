@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Class of wheel sets, defines what objects are being controlled and how
+/// </summary>
 [System.Serializable]
 public class WheelSet {
     public WheelCollider leftWheel;
@@ -10,6 +13,9 @@ public class WheelSet {
     public bool steering;
 }
 
+/// <summary>
+/// Manages all car controls regardless of the user e.g. human or machine
+/// </summary>
 public class CarControls : MonoBehaviour {
     public List<WheelSet> wheelSets;
     public float maximumMotorTorque;
@@ -21,10 +27,16 @@ public class CarControls : MonoBehaviour {
         GetComponent<Rigidbody>().centerOfMass = centerOfMassCorrection;
     }
 
-    public void PerformMovement(float _steering, float _motor, bool _braking, bool _ai)
-    {
-        if (_ai)
-        {
+    /// <summary>
+    /// Applies the give values and translates them into movement for the car object.
+    /// There are minor differences between the AI and Human controls here
+    /// </summary>
+    /// <param name="_steering">Horazontal Axis Value</param>
+    /// <param name="_motor">Vertical Axis Value</param>
+    /// <param name="_braking">Pass true if braking</param>
+    /// <param name="_ai">Pass true if this movement is performed by the AI / ML</param>
+    public void PerformMovement(float _steering, float _motor, bool _braking, bool _ai) {
+        if (_ai) {
             _steering = maximumSteeringAngle * _steering;
             _motor = maximumMotorTorque * _motor;
         }
@@ -47,11 +59,12 @@ public class CarControls : MonoBehaviour {
         }
     }
 
-    public void CompleteStop()
-    {
+    /// <summary>
+    /// Additional function to prevent additional movement after a respawn
+    /// </summary>
+    public void CompleteStop() {
         PerformMovement(0f, 0f, true, false);
-        foreach (WheelSet wheels in wheelSets)
-        {
+        foreach (WheelSet wheels in wheelSets) {
             wheels.leftWheel.steerAngle = 0f;
             wheels.leftWheel.motorTorque = 0f;
             wheels.leftWheel.brakeTorque = 0f;

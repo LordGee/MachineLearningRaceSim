@@ -1,54 +1,14 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
-using UnityEngine;
 
+/// <summary>
+/// This class manages the heart of the Neural Network
+/// gamthering inputs and executing the updates to provide
+/// outputs. Functions for exporting and importing take 
+/// place here.
+/// </summary>
 public class NeuralNetwork {
-
-    // TODO Come back and delete this if no longer required
-    /*
-    public void CreateNN(int _hidden, int _input, int _neuronsPerHidden, int _output)
-    {
-        inputAmount = _input;
-        outputAmount = _output;
-        for (int i = 0; i < _hidden; i++)
-        {
-            NNLayer layer = new NNLayer();
-            layer.PopulateLayer(_neuronsPerHidden, _input);
-            hiddenLayers.Add(layer);
-        }
-        outputLayer = new NNLayer();
-        outputLayer.PopulateLayer(_output, _neuronsPerHidden);
-    }
-    
-            public int GetNumberOfHiddenLayers()
-    {
-        return hiddenLayers.Capacity;
-    }
-
-    public Genome ToGenome()
-    {
-        Genome genome = new Genome();
-        for (int i = 0; i < hiddenLayers.Capacity; i++)
-        {
-            List<float> hiddenWeights = new List<float>();
-            hiddenLayers[i].GetWeights(ref hiddenWeights);
-            for (int j = 0; j < hiddenWeights.Capacity; j++)
-            {
-                genome.weights.Add(hiddenWeights[j]);
-            }
-        }
-        List<float> outputWeights = new List<float>();
-        outputLayer.GetWeights(ref outputWeights);
-        for (int i = 0; i < outputWeights.Capacity; i++)
-        {
-            genome.weights.Add(outputWeights[i]);
-        }
-        return genome;
-    }
-    */
 
     private int inputAmount, outputAmount;
     private List<float> inputs;
@@ -85,6 +45,26 @@ public class NeuralNetwork {
         hiddenLayers.Clear();
     }
 
+    /// <summary>
+    /// Updates the input values which have been provided by the Input Manager
+    /// in preparation for the update of  the Neural Network (next function 
+    /// UpdateNN()).
+    /// </summary>
+    /// <param name="_in">Input values to be evaluated by the NN</param>
+    public void SetInput(List<float> _in) {
+        inputs = _in;
+    }
+
+    /// <summary>
+    /// This function handles the updating of the Neural Network.
+    /// 1. Creates an empty list for the outputs for each layer
+    /// 2. Starts by iterating through the hidden layer(s) then 
+    /// the output layer
+    /// 3. If its the first iteration that the inputs are 
+    /// provided by the input manager e.g. from the senors.
+    /// 4. For all other iteration the outputs from the previous layer 
+    /// become the inputs.
+    /// </summary>
     public void UpdateNN() {
         outputs = new List<float>();
         for (int i = 0; i < hiddenLayers.Count; i++) {
@@ -97,10 +77,12 @@ public class NeuralNetwork {
         outputLayer.Evaluate(inputs, ref outputs);
     }
 
-    public void SetInput(List<float> _in) {
-        inputs = _in;
-    }
 
+    /// <summary>
+    /// Getter for the output values by id
+    /// </summary>
+    /// <param name="_ID">Defines which output to return</param>
+    /// <returns>Desired output value</returns>
     public float GetOutput(int _ID) {
         if (_ID >= outputAmount) {
             return 0.0f;
@@ -108,10 +90,12 @@ public class NeuralNetwork {
         return outputs[_ID];
     }
 
-    public int GetTotalOutputs() {
-        return outputAmount;
-    }
-
+    /// <summary>
+    /// Exports to a .csv file the current values within the hidden 
+    /// and output layers which can be imported later to perform 
+    /// the test again
+    /// </summary>
+    /// <param name="_filename">Filename and Location</param>
     public void ExportNN(string _filename) {
         TextWriter file = new StreamWriter(_filename);
         file.WriteLine(inputAmount);
@@ -126,6 +110,11 @@ public class NeuralNetwork {
         file.Dispose();
     }
 
+    /// <summary>
+    /// Returns the state of the Neural Network back to a previously 
+    /// exported start that will reproduce the same outcome
+    /// </summary>
+    /// <param name="_filename">Filename and Location</param>
     public void ImportNN(string _filename) {
         TextReader file = new StreamReader(_filename);
         if (file != null) {
@@ -176,6 +165,9 @@ public class NeuralNetwork {
         }
     }
 
+    /// <summary>
+    /// Clears the Neural Network in prepration to create a new one.
+    /// </summary>
     public void ReleaseNN() {
         if (inputLayer != null) {
             inputLayer = null;
@@ -191,8 +183,16 @@ public class NeuralNetwork {
         hiddenLayers.Clear();
     }
 
-    public void FromGenome(ref Genome _genome, int _input, int _neuronsPerHidden, int _output)
-    {
+    /// <summary>
+    /// This class populates each neuron form the weight provided from the Genome. 
+    /// Generating a new Neural Network, this provides the infrastructure for the 
+    /// decision making process.
+    /// </summary>
+    /// <param name="_genome">Current genome to be executed</param>
+    /// <param name="_input">Total number of inputs</param>
+    /// <param name="_neuronsPerHidden">Total number of neurons per hidden layer</param>
+    /// <param name="_output">Total number of outputs</param>
+    public void PopulateNeuronsFromGenome(ref Genome _genome, int _input, int _neuronsPerHidden, int _output) {
         ReleaseNN();
         outputAmount = _output;
         inputAmount = _input;

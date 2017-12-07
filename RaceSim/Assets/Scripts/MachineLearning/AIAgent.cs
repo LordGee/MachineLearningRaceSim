@@ -1,30 +1,9 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
 
 /// <summary>
 /// This class managers the current AI agent that is active
 /// </summary>
 public class AIAgent {
-
-    // TODO: come back and delete this if not needed 
-    /*
-    public float[] GetOutputs()
-    {
-        return currentOutputs;
-    }
-    public void CreateNeuralNetwork()
-    {
-        nn.ReleaseNN();
-        nn.CreateNN(ConstantManager.NUMBER_OF_HIDDEN_LAYERS,
-            (int)ConstantManager.NNInputs.INPUT_COUNT,
-            ConstantManager.HIDDEN_LAYER_NEURONS,
-            (int)ConstantManager.NNOutputs.OUTPUT_COUNT);
-    }
-    public void ClearFailiure()
-    {
-        hasFailed = false;
-    }
-    */
 
     private bool hasFailed;
     private NeuralNetwork nn;

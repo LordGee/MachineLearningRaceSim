@@ -17,7 +17,7 @@ public class HumanCarManager : MonoBehaviour
         pp = FindObjectOfType<PlayerPrefsController>();
         cc = GetComponent<CarControls>();
         lapTime = previousTime = 0f;
-        EventManagerOneArg.TriggerEvent(ConstantManager.UI_HUMAN, pp.GetBestTime(SceneManager.GetActiveScene().buildIndex));
+        EventManager.TriggerEvent(ConstantManager.UI_HUMAN, pp.GetBestTime(SceneManager.GetActiveScene().buildIndex));
     }
 
     void Update()
@@ -25,7 +25,7 @@ public class HumanCarManager : MonoBehaviour
         lapTime += Time.deltaTime;
         if (lapTime - previousTime > 1f)
         {
-            EventManagerOneArg.TriggerEvent(ConstantManager.UI_TIMER, lapTime);
+            EventManager.TriggerEvent(ConstantManager.UI_TIMER, lapTime);
             previousTime = lapTime;
         }
         float motor = cc.maximumMotorTorque * Input.GetAxis("Vertical");
@@ -61,14 +61,14 @@ public class HumanCarManager : MonoBehaviour
         transform.position = _pos;
         transform.rotation = _quat;
         lapTime = previousTime = 0f;
-        EventManagerOneArg.TriggerEvent(ConstantManager.UI_TIMER, lapTime);
+        EventManager.TriggerEvent(ConstantManager.UI_TIMER, lapTime);
     }
 
     private void UpdateTimerResults()
     {
         if (pp.GetBestTime(SceneManager.GetActiveScene().buildIndex) < lapTime)
         {
-            EventManagerOneArg.TriggerEvent(ConstantManager.UI_HUMAN, lapTime);
+            EventManager.TriggerEvent(ConstantManager.UI_HUMAN, lapTime);
             pp.SetBestTime(lapTime, SceneManager.GetActiveScene().buildIndex);
         }
     }
