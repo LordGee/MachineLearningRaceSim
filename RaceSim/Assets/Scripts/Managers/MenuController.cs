@@ -16,6 +16,7 @@ public class MenuController : MonoBehaviour {
     private List<int> trackNumber;
     private List<float> trackFitness;
     private GameObject displayFitness, displayTime, VSButton;
+    private AudioSource thud;
 
     /// <summary>
     /// Constructor
@@ -33,6 +34,7 @@ public class MenuController : MonoBehaviour {
         trackFitness = new List<float>();
         LoadList();
         HighlightSelectedTrack(0);
+        thud = GetComponent<AudioSource>();
     }
 
     /// <summary>
@@ -142,5 +144,12 @@ public class MenuController : MonoBehaviour {
         pp.SetFitness(selectedBestFitness);
         SceneManager.LoadScene(selectedTrack);
     }
-    
+
+    /// <summary>
+    /// Called by the Buttons event trigger component when a pointer 
+    /// enters the game object.
+    /// </summary>
+    public void OnButtonHover() {
+        thud.Play();
+    }
 }
