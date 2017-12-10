@@ -37,6 +37,11 @@ public class MenuController : MonoBehaviour {
         thud = GetComponent<AudioSource>();
     }
 
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape)) { Application.Quit(); }
+    }
+
     /// <summary>
     /// Configures the game for a Human Player
     /// </summary>

@@ -124,7 +124,7 @@ public class InputManager : MonoBehaviour {
     /// </summary>
     /// <returns>Velocity magnitude</returns>
     public float GetAcceleration() {
-        if (GetComponent<Rigidbody>().velocity.magnitude > 0.1) {
+        if (GetComponent<Rigidbody>().velocity.magnitude > 0.2) {
             acceleration = GetComponent<Rigidbody>().velocity.magnitude;
         } else {
             acceleration = 0f;

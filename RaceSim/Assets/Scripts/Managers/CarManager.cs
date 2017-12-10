@@ -14,7 +14,7 @@ public class CarManager : MonoBehaviour {
     private InputManager im;
     private EntityManager em;
     private PlayerPrefsController pp;
-    private float lapTime;
+    private float lapTime, bestLap;
 
     public static bool machineAI, loadBest;
     public static float timeSpeed;
@@ -40,6 +40,7 @@ public class CarManager : MonoBehaviour {
         if (loadBest) {
             transform.Find("Main Camera").gameObject.SetActive(false);
             lapTime = 0f;
+            bestLap = 9999f;
         }
         timeSpeed = 1f;
     }
@@ -124,7 +125,11 @@ public class CarManager : MonoBehaviour {
         if (col.transform.tag == "FinishLine") {
             if (machineAI || loadBest) {
                 if (loadBest) {
-                    EventManager.TriggerEvent(ConstantManager.UI_MACHINE, lapTime);
+                    if (lapTime < bestLap)
+                    {
+                        EventManager.TriggerEvent(ConstantManager.UI_MACHINE, lapTime);
+                        bestLap = lapTime;
+                    }
                 }
                 em.AddCompletionFitness(ConstantManager.COMPLETION_BONUS);
                 em.AgentFailed();

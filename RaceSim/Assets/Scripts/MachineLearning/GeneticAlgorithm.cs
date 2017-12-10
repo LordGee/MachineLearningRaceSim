@@ -170,7 +170,7 @@ public class GeneticAlgorithm {
     public void BreedPopulation()
     {
         List<Genome> bestGenomes = new List<Genome>();
-        GetBestCases(4, ref bestGenomes);
+        GetBestCases(ConstantManager.NUMBER_OF_GENOMES_TO_BREED, ref bestGenomes);
         List<Genome> children = new List<Genome>();
         Genome topGenome = new Genome();
         for (int i = 0; i < bestGenomes.Count; i++) {

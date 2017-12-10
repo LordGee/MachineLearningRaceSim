@@ -8,6 +8,7 @@ public class ConstantManager
     public const int MAXIMUM_GENOME_POPULATION = 20;
     public const int HIDDEN_LAYER_NEURONS = 8;
     public const int NUMBER_OF_HIDDEN_LAYERS = 1;
+    public const int NUMBER_OF_GENOMES_TO_BREED = 4;
     public const float RAY_LENGTH = 100f;
     public const float BIAS = -1.0f;
     public const float COMPLETION_BONUS = 1000f;

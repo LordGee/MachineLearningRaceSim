@@ -3,28 +3,29 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class HumanCarManager : MonoBehaviour
-{
+public class HumanCarManager : MonoBehaviour {
 
     private GameController gc;
     private CarControls cc;
     private PlayerPrefsController pp;
-    private float lapTime, previousTime;
+    private float lapTime, previousTime, bestLapTime;
 
-    void Start()
-    {
+    void Start() {
         gc = FindObjectOfType<GameController>();
         pp = FindObjectOfType<PlayerPrefsController>();
         cc = GetComponent<CarControls>();
         lapTime = previousTime = 0f;
-        EventManager.TriggerEvent(ConstantManager.UI_HUMAN, pp.GetBestTime(SceneManager.GetActiveScene().buildIndex));
+        bestLapTime = pp.GetBestTime(SceneManager.GetActiveScene().buildIndex);
+        if (bestLapTime == 0f)
+        {
+            bestLapTime = 9999f;
+        }
+        EventManager.TriggerEvent(ConstantManager.UI_HUMAN, bestLapTime);
     }
 
-    void Update()
-    {
+    void Update() {
         lapTime += Time.deltaTime;
-        if (lapTime - previousTime > 1f)
-        {
+        if (lapTime - previousTime > 1f) {
             EventManager.TriggerEvent(ConstantManager.UI_TIMER, lapTime);
             previousTime = lapTime;
         }
@@ -36,7 +37,6 @@ public class HumanCarManager : MonoBehaviour
         } else {
             braking = false;
         }
-        // Debug.Log("Performed Movement");
         cc.PerformMovement(steering, motor, braking, false);
     }
 
@@ -64,10 +64,9 @@ public class HumanCarManager : MonoBehaviour
         EventManager.TriggerEvent(ConstantManager.UI_TIMER, lapTime);
     }
 
-    private void UpdateTimerResults()
-    {
-        if (pp.GetBestTime(SceneManager.GetActiveScene().buildIndex) < lapTime)
-        {
+    private void UpdateTimerResults() {
+        if (lapTime < bestLapTime) {
+            bestLapTime = lapTime;
             EventManager.TriggerEvent(ConstantManager.UI_HUMAN, lapTime);
             pp.SetBestTime(lapTime, SceneManager.GetActiveScene().buildIndex);
         }
