@@ -38,10 +38,13 @@ public class CarControls : MonoBehaviour {
     /// <param name="_braking">Pass true if braking</param>
     /// <param name="_ai">Pass true if this movement is performed by the AI / ML</param>
     public void PerformMovement(float _steering, float _motor, bool _braking, bool _ai) {
-        if (_motor > 0f && engine.pitch < 3) {
-            engine.pitch += 0.1f;
-        } else if (engine.pitch > 1) {
-            engine.pitch -= 0.2f;
+        if (engine != null)
+        {
+            if (_motor > 0f && engine.pitch < 3) {
+                engine.pitch += 0.1f;
+            } else if (engine.pitch > 1) {
+                engine.pitch -= 0.2f;
+            }
         }
         if (_ai) {
             _steering = maximumSteeringAngle * _steering;
