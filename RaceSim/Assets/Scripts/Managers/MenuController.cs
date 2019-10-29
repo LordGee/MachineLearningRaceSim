@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.Assertions.Must;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using Button = UnityEngine.Experimental.UIElements.Button;
 
 public class MenuController : MonoBehaviour {
 
